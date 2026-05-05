@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Profile;
 use App\Models\ProfilDetail;
-use Illuminate\Http\Request;
+use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,25 +31,21 @@ class ProfileController extends Controller
     }
 
     // Enregistrer les modifications
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
         $user = Auth::user();
 
-        $request->validate([
-            'nom'        => 'required|string|max:100',
-            'prenom'     => 'nullable|string|max:100',
-            'telephone'  => 'nullable|string|max:20',
-            'localisation'=> 'nullable|string|max:150',
-            'bio'        => 'nullable|string|max:300',
-            'photo'      => 'nullable|image|mimes:jpeg,png|max:2048',
+        $data = $request->only([
+            'nom', 'prenom', 'telephone', 'localisation', 'bio'
         ]);
-
-        $data = $request->only(['nom', 'prenom', 'telephone', 'localisation', 'bio']);
 
         // Upload photo
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('photos', 'public');
-            $data['photo'] = $path;
+            // Supprimer l'ancienne photo si elle existe
+            if ($user->profile?->photo) {
+                Storage::disk('public')->delete($user->profile->photo);
+            }
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
         // Mettre à jour ou créer le profil
@@ -60,15 +56,32 @@ class ProfileController extends Controller
 
         // Champs spécifiques offreurs
         if ($user->isOffreur()) {
+            $detailData = [
+                'competences'   => $request->competences,
+                'tarif'         => $request->tarif,
+                'disponibilite' => $request->boolean('disponibilite'),
+                'portfolio_url' => $request->portfolio_url,
+            ];
+
+            // Upload portfolio PDF
+            if ($request->hasFile('portfolio_fichier')) {
+                $detailData['portfolio_fichier'] = $request->file('portfolio_fichier')
+                    ->store('portfolios', 'public');
+            }
+
             ProfilDetail::updateOrCreate(
                 ['profile_id' => $profile->id],
-                [
-                    'competences'  => $request->competences,
-                    'tarif'        => $request->tarif,
-                    'disponibilite'=> $request->has('disponibilite'),
-                    'portfolio_url'=> $request->portfolio_url,
-                ]
+                $detailData
             );
+        }
+
+        // Champs spécifiques entreprise
+        if ($user->role === 'entreprise') {
+            $profile->update([
+                'secteur_activite' => $request->secteur_activite,
+                'taille_structure' => $request->taille_structure,
+                'site_web'         => $request->site_web,
+            ]);
         }
 
         // Recalculer le taux de complétion
@@ -80,7 +93,7 @@ class ProfileController extends Controller
 
     private function updateCompletionRate(Profile $profile, $user)
     {
-        $champs = ['nom', 'photo', 'telephone', 'localisation', 'bio'];
+        $champs  = ['nom', 'photo', 'telephone', 'localisation', 'bio'];
         $remplis = 0;
 
         foreach ($champs as $champ) {
@@ -95,6 +108,8 @@ class ProfileController extends Controller
             $total = 5;
         }
 
-        $profile->update(['completion_rate' => round(($remplis / $total) * 100)]);
+        $profile->update([
+            'completion_rate' => round(($remplis / $total) * 100)
+        ]);
     }
 }
