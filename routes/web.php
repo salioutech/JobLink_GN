@@ -12,14 +12,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminController;
 
 // =======================================
-// ROUTES PUBLIQUES
+// ROUTES PUBLIQUES SANS PARAMÈTRES
 // =======================================
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/profils/{id}', [ProfileController::class, 'show'])->name('profil.show');
-Route::get('/services/{id}', [ServiceController::class, 'show'])->name('service.show');
-Route::get('/offres/{id}', [OffreController::class, 'show'])->name('offre.show');
 
 // =======================================
 // ROUTES AUTH (gérées par Breeze)
@@ -115,3 +113,11 @@ Route::middleware(['auth', 'check.statut', 'role:admin'])
         Route::get('/stats', [AdminController::class, 'stats'])->name('stats');
 
     });
+
+// =======================================
+// ROUTES PUBLIQUES AVEC PARAMÈTRES
+// (définies en dernier pour éviter les conflits)
+// =======================================
+
+Route::get('/services/{id}', [ServiceController::class, 'show'])->name('service.show');
+Route::get('/offres/{id}', [OffreController::class, 'show'])->name('offre.show');
