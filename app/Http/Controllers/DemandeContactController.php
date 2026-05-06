@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\StoreDemandeContactRequest;
 use App\Models\DemandeContact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,13 +56,13 @@ class DemandeContactController extends Controller
         }
 
         DemandeContact::create([
-            'demandeur_id' => Auth::id(),
-            'offreur_id'   => $request->offreur_id,
-            'message'      => $request->message,
-            'statut'       => 'en_attente',
-        ]);
+        'demandeur_id' => Auth::id(),
+        'offreur_id'   => $request->offreur_id,
+        'message'      => $request->message,
+        'statut'       => 'en_attente',
+    ]);
 
-        return back()->with('success', 'Demande de contact envoyée !');
+    return back()->with('success', 'Demande de contact envoyée !');
     }
 
     // Accepter ou refuser (offreur)

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\StoreSignalementRequest;
 use App\Models\Signalement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,8 +22,8 @@ class SignalementController extends Controller
             'cible_id'     => $request->cible_id,
             'motif'        => $request->motif,
             'statut'       => 'en_attente',
-        ]);
+       ]);
 
-        return back()->with('success', 'Signalement envoyé à l\'administrateur.');
+    return back()->with('success', 'Signalement envoyé à l\'administrateur.');
     }
 }

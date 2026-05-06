@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\StoreCandidatureRequest;
 use App\Models\Candidature;
 use App\Models\Offre;
 use Illuminate\Http\Request;
@@ -50,14 +50,14 @@ class CandidatureController extends Controller
             return back()->withErrors(['offre_id' => 'Vous avez déjà postulé à cette offre.']);
         }
 
-        Candidature::create([
-            'offreur_id' => Auth::id(),
-            'offre_id'   => $request->offre_id,
-            'message'    => $request->message,
-            'statut'     => 'en_attente',
+         Candidature::create([
+        'offreur_id' => Auth::id(),
+        'offre_id'   => $request->offre_id,
+        'message'    => $request->message,
+        'statut'     => 'en_attente',
         ]);
 
-        return back()->with('success', 'Candidature envoyée avec succès !');
+         return back()->with('success', 'Candidature envoyée avec succès !');
     }
 
     // Accepter ou refuser (demandeur)
