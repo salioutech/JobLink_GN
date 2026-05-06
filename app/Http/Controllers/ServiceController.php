@@ -39,26 +39,27 @@ class ServiceController extends Controller
 
     public function edit($id)
     {
-        $service    = Service::where('user_id', Auth::id())->findOrFail($id);
+        $service = Service::findOrFail($id);
+        $this->authorize('update', $service); // ← Policy
         $categories = Categorie::all();
         return view('services.edit', compact('service', 'categories'));
     }
 
     public function update(StoreServiceRequest $request, $id)
     {
-        $service = Service::where('user_id', Auth::id())->findOrFail($id);
+        $service = Service::findOrFail($id);
+        $this->authorize('update', $service); // ← Policy
         $service->update($request->validated());
-
         return redirect()->route('dashboard')
-               ->with('success', 'Service modifié avec succès !');
+            ->with('success', 'Service modifié avec succès !');
     }
 
     public function destroy($id)
     {
-        $service = Service::where('user_id', Auth::id())->findOrFail($id);
+        $service = Service::findOrFail($id);
+        $this->authorize('delete', $service); // ← Policy
         $service->delete();
-
         return redirect()->route('dashboard')
-               ->with('success', 'Service supprimé.');
+            ->with('success', 'Service supprimé.');
     }
 }
