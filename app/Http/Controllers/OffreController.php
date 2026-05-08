@@ -52,39 +52,27 @@ class OffreController extends Controller
 
     public function edit($id)
     {
-        $offre      = Offre::where('user_id', Auth::id())->findOrFail($id);
+        $offre = Offre::findOrFail($id);
+        $this->authorize('update', $offre); // ← Policy
         $categories = Categorie::all();
         return view('offres.edit', compact('offre', 'categories'));
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreOffreRequest $request, $id)
     {
-        $offre = Offre::where('user_id', Auth::id())->findOrFail($id);
-
-        $request->validate([
-            'titre'       => 'required|string|max:200',
-            'description' => 'required|string|min:50',
-            'type'        => 'required|in:emploi,mission,demande_service',
-            'categorie_id'=> 'required|exists:categories,id',
-            'budget'      => 'nullable|numeric|min:0',
-            'statut'      => 'required|in:active,cloturee',
-        ]);
-
-        $offre->update($request->only([
-            'titre', 'description', 'type',
-            'categorie_id', 'budget', 'duree',
-            'competences_requises', 'statut'
-        ]));
-
+        $offre = Offre::findOrFail($id);
+        $this->authorize('update', $offre); // ← Policy
+        $offre->update($request->validated());
         return redirect()->route('dashboard')
-               ->with('success', 'Offre modifiée avec succès !');
+            ->with('success', 'Offre modifiée avec succès !');
     }
 
     public function destroy($id)
     {
-        $offre = Offre::where('user_id', Auth::id())->findOrFail($id);
-        $offre->delete(); // SoftDelete
+        $offre = Offre::findOrFail($id);
+        $this->authorize('delete', $offre); // ← Policy
+        $offre->delete();
         return redirect()->route('dashboard')
-               ->with('success', 'Offre supprimée.');
+            ->with('success', 'Offre supprimée.');
     }
 }
