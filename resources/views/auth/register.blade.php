@@ -91,12 +91,12 @@
             </select>
         </div>
 
-        {{-- PRÉNOM (masqué pour entreprise) --}}
+        {{-- PRÉNOM (masqué pour entreprise) 
         <div id="champ-prenom" style="margin-bottom:16px;">
             <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Prénom</label>
             <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Ex: Mamadou"
                 style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-        </div>
+        </div>--}}
 
         {{-- RAISON SOCIALE (entreprise uniquement) --}}
         <div id="champ-raison-sociale" style="display:none;margin-bottom:16px;">
