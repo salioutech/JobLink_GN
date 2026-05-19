@@ -24,13 +24,14 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nom'      => 'required|string|max:100',
-            'prenom'   => 'nullable|string|max:100',
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
-            'role'     => 'required|in:freelance,artisan,tuteur,entreprise,particulier',
-            'telephone'=> 'nullable|string|max:20',
-            'commune'  => 'nullable|string|max:100',
+            'nom'            => 'required_unless:role,entreprise|nullable|string|max:100',
+            'prenom'         => 'nullable|string|max:100',
+            'raison_sociale' => 'required_if:role,entreprise|nullable|string|max:200',
+            'email'          => 'required|string|email|max:255|unique:users',
+            'password'       => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
+            'role'           => 'required|in:freelance,artisan,tuteur,entreprise,particulier',
+            'telephone'      => 'nullable|string|max:20',
+            'commune'        => 'nullable|string|max:100',
         ]);
 
         // 1. Créer le compte utilisateur
@@ -41,11 +42,15 @@ class RegisteredUserController extends Controller
             'statut'   => 'actif',
         ]);
 
-        // 2. Créer le profil de base (commun à tous les rôles)
+        // 2. Créer le profil — nom = raison sociale pour entreprise
         $profile = Profile::create([
             'user_id'         => $user->id,
-            'nom'             => $request->nom,
-            'prenom'          => $request->prenom,
+            'nom'             => $request->role === 'entreprise'
+                                    ? $request->raison_sociale
+                                    : $request->nom,
+            'prenom'          => $request->role === 'entreprise'
+                                    ? null
+                                    : $request->prenom,
             'telephone'       => $request->telephone,
             'localisation'    => $request->commune,
             'completion_rate' => 30,

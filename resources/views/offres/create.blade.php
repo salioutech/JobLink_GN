@@ -207,6 +207,21 @@ document.querySelectorAll('input[name="type"]').forEach(radio => {
         });
         this.style.border = '2px solid #1A4B7A';
         this.style.background = '#E8F0F9';
+        this.querySelector('input[type="radio"]').checked = true;
+    });
+});
+
+// Sélection statut publication
+document.querySelectorAll('input[name="statut"]').forEach(radio => {
+    radio.closest('label').addEventListener('click', function() {
+        document.querySelectorAll('input[name="statut"]').forEach(r => {
+            const lbl = r.closest('label');
+            lbl.style.border = '2px solid #E2E8F0';
+            lbl.style.background = '#fff';
+        });
+        this.style.border = '2px solid #1A9B5A';
+        this.style.background = '#E6F7EE';
+        this.querySelector('input[type="radio"]').checked = true;
     });
 });
 </script>

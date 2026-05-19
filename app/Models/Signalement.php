@@ -6,10 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Signalement extends Model
 {
-    public $timestamps = false; // la table n'a que created_at
-    
+     public $timestamps = false; // ← ajouter ceci
     protected $fillable = [
-        'signaleur_id', 'cible_type', 'cible_id', 'motif', 'statut'
+        'signaleur_id',
+        'cible_type',
+        'cible_id',
+        'motif',
+        'statut',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime', // ← ajouter ceci
+        'updated_at' => 'datetime',
     ];
 
     public function signaleur()

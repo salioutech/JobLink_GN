@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Offre;
 use App\Models\Categorie;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
+use App\Http\Requests\StoreOffreRequest;
 use Illuminate\Support\Facades\Auth;
 
 class OffreController extends Controller

@@ -10,7 +10,6 @@
 
 <div style="max-width:580px;margin:28px auto 32px;background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:28px;box-shadow:0 2px 16px rgba(0,0,0,0.06);">
 
-    {{-- ERREURS --}}
     @if($errors->any())
         <div class="alert-error">
             <ul style="list-style:none;padding:0;">
@@ -31,14 +30,16 @@
             </label>
             <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
                 @foreach([
-                    'freelance'  => ['💻', 'Freelance', 'Dev, design...'],
-                    'artisan'    => ['🔧', 'Artisan', 'Élec, plomb...'],
-                    'tuteur'     => ['🎓', 'Tuteur', 'Cours, soutien'],
-                    'entreprise' => ['🏢', 'Entreprise', 'PME, ONG...'],
-                    'particulier'=> ['👤', 'Particulier', 'Besoin ponctuel'],
+                    'freelance'   => ['💻', 'Freelance',   'Dev, design...'],
+                    'artisan'     => ['🔧', 'Artisan',     'Élec, plomb...'],
+                    'tuteur'      => ['🎓', 'Tuteur',      'Cours, soutien'],
+                    'entreprise'  => ['🏢', 'Entreprise',  'PME, ONG...'],
+                    'particulier' => ['👤', 'Particulier', 'Besoin ponctuel'],
                 ] as $value => $info)
-                    <label style="border:2px solid {{ old('role') === $value ? '#1A9B5A' : '#E2E8F0' }};border-radius:10px;padding:12px 6px;text-align:center;cursor:pointer;background:{{ old('role') === $value ? '#E6F7EE' : '#fff' }};">
-                        <input type="radio" name="role" value="{{ $value }}" {{ old('role') === $value ? 'checked' : '' }} style="display:none;">
+                    <label data-role="{{ $value }}"
+                        style="border:2px solid {{ old('role') === $value ? '#1A9B5A' : '#E2E8F0' }};border-radius:10px;padding:12px 6px;text-align:center;cursor:pointer;background:{{ old('role') === $value ? '#E6F7EE' : '#fff' }};">
+                        <input type="radio" name="role" value="{{ $value }}"
+                            {{ old('role') === $value ? 'checked' : '' }} style="display:none;">
                         <div style="font-size:22px;margin-bottom:5px;">{{ $info[0] }}</div>
                         <div style="font-size:11px;font-weight:700;color:#0D2137;">{{ $info[1] }}</div>
                         <div style="font-size:10px;color:#5a6a7a;margin-top:2px;">{{ $info[2] }}</div>
@@ -49,18 +50,25 @@
 
         <hr style="border:none;border-top:1px solid #E2E8F0;margin-bottom:20px;">
 
-        {{-- NOM + PRÉNOM --}}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-            <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Nom <span style="color:#c0392b;">*</span></label>
-                <input type="text" name="nom" value="{{ old('nom') }}" placeholder="Ex: Diallo"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-            </div>
-            <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Prénom</label>
-                <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Ex: Mamadou"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-            </div>
+        {{-- NOM — masqué pour entreprise --}}
+        <div id="champ-nom" style="margin-bottom:16px;">
+            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Nom <span style="color:#c0392b;">*</span></label>
+            <input type="text" name="nom" value="{{ old('nom') }}" placeholder="Ex: Diallo"
+                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+        </div>
+
+        {{-- PRÉNOM — masqué pour entreprise --}}
+        <div id="champ-prenom" style="margin-bottom:16px;">
+            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Prénom</label>
+            <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Ex: Mamadou"
+                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+        </div>
+
+        {{-- RAISON SOCIALE — entreprise uniquement --}}
+        <div id="champ-raison-sociale" style="display:none;margin-bottom:16px;">
+            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Raison sociale <span style="color:#c0392b;">*</span></label>
+            <input type="text" name="raison_sociale" value="{{ old('raison_sociale') }}" placeholder="Ex: TechGuinée SARL"
+                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
         </div>
 
         {{-- EMAIL --}}
@@ -91,36 +99,18 @@
             </select>
         </div>
 
-        {{-- PRÉNOM (masqué pour entreprise) 
-        <div id="champ-prenom" style="margin-bottom:16px;">
-            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Prénom</label>
-            <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Ex: Mamadou"
-                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-        </div>--}}
-
-        {{-- RAISON SOCIALE (entreprise uniquement) --}}
-        <div id="champ-raison-sociale" style="display:none;margin-bottom:16px;">
-            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Raison sociale <span style="color:#c0392b;">*</span></label>
-            <input type="text" name="raison_sociale" value="{{ old('raison_sociale') }}" placeholder="Ex: TechGuinée SARL"
-                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-        </div>
-
-        {{-- CHAMPS OFFREURS (freelance, artisan, tuteur) --}}
+        {{-- CHAMPS OFFREURS --}}
         <div id="champs-offreur" style="display:none;">
             <hr style="border:none;border-top:1px solid #E2E8F0;margin-bottom:16px;">
             <div style="font-size:13px;font-weight:700;color:#0D2137;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
                 <span style="width:20px;height:20px;background:#1A4B7A;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">i</span>
                 Informations professionnelles
             </div>
-
-            {{-- COMPÉTENCES --}}
             <div style="margin-bottom:16px;">
                 <label id="label-competences" style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Compétences</label>
                 <input type="text" name="competences" value="{{ old('competences') }}" placeholder="Séparez par des virgules"
                     style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
             </div>
-
-            {{-- TARIF + UNITÉ --}}
             <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:16px;">
                 <div>
                     <label id="label-tarif" style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Tarif indicatif (GNF)</label>
@@ -138,8 +128,6 @@
                     </select>
                 </div>
             </div>
-
-            {{-- DISPONIBILITÉ --}}
             <div style="margin-bottom:16px;">
                 <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:8px;">Disponibilité</label>
                 <div style="display:flex;gap:16px;">
@@ -160,7 +148,6 @@
                 <span style="width:20px;height:20px;background:#1A4B7A;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">i</span>
                 Informations de votre structure
             </div>
-
             <div style="margin-bottom:16px;">
                 <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Secteur d'activité <span style="color:#c0392b;">*</span></label>
                 <select name="secteur_activite"
@@ -171,7 +158,6 @@
                     @endforeach
                 </select>
             </div>
-
             <div style="margin-bottom:16px;">
                 <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Taille de la structure <span style="color:#c0392b;">*</span></label>
                 <select name="taille_structure"
@@ -182,7 +168,6 @@
                     @endforeach
                 </select>
             </div>
-
             <div style="margin-bottom:16px;">
                 <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Site web (optionnel)</label>
                 <input type="url" name="site_web" value="{{ old('site_web') }}" placeholder="https://www.monentreprise.com"
@@ -228,57 +213,52 @@
 
 @push('scripts')
 <script>
-// ---- Sélection du rôle ----
-document.querySelectorAll('input[name="role"]').forEach(radio => {
-    radio.closest('label').addEventListener('click', function() {
-        // Reset toutes les cartes
-        document.querySelectorAll('input[name="role"]').forEach(r => {
-            const lbl = r.closest('label');
-            lbl.style.border = '2px solid #E2E8F0';
-            lbl.style.background = '#fff';
+const cartes = document.querySelectorAll('label[data-role]');
+
+cartes.forEach(carte => {
+    carte.addEventListener('click', function() {
+        cartes.forEach(c => {
+            c.style.border     = '2px solid #E2E8F0';
+            c.style.background = '#fff';
         });
-        // Activer la carte cliquée
-        this.style.border = '2px solid #1A9B5A';
+        this.style.border     = '2px solid #1A9B5A';
         this.style.background = '#E6F7EE';
-        // Cocher le radio
         this.querySelector('input[type="radio"]').checked = true;
-        // Adapter les champs
-        adapterChamps(this.querySelector('input[type="radio"]').value);
+        adapterChamps(this.getAttribute('data-role'));
     });
 });
 
 function adapterChamps(role) {
-    // Cacher tout d'abord
-    document.getElementById('champs-offreur').style.display = 'none';
-    document.getElementById('champs-entreprise').style.display = 'none';
-    document.getElementById('champ-prenom').style.display = 'block';
+    // Reset tous les blocs
+    document.getElementById('champs-offreur').style.display       = 'none';
+    document.getElementById('champs-entreprise').style.display    = 'none';
+    document.getElementById('champ-nom').style.display            = 'block';
+    document.getElementById('champ-prenom').style.display         = 'block';
     document.getElementById('champ-raison-sociale').style.display = 'none';
 
-    // Afficher selon le rôle
     if (['freelance', 'artisan', 'tuteur'].includes(role)) {
         document.getElementById('champs-offreur').style.display = 'block';
 
-        // Adapter les labels selon le rôle
         const labels = {
             freelance: {
                 competences: 'Compétences (ex: Laravel, Design, Comptabilité...)',
-                tarif: 'Tarif horaire ou par projet (GNF)',
-                unites: ['/ heure', '/ jour', '/ projet']
+                tarif:       'Tarif horaire ou par projet (GNF)',
+                unites:      ['/ heure', '/ jour', '/ projet']
             },
             artisan: {
                 competences: "Domaine d'activité (ex: Électricité, Plomberie...)",
-                tarif: 'Tarif journalier ou par intervention (GNF)',
-                unites: ['/ jour', '/ intervention', '/ heure']
+                tarif:       'Tarif journalier ou par intervention (GNF)',
+                unites:      ['/ jour', '/ intervention', '/ heure']
             },
             tuteur: {
                 competences: 'Matières enseignées (ex: Maths, Physique, Anglais...)',
-                tarif: 'Tarif par séance (GNF)',
-                unites: ['/ séance', '/ heure', '/ mois']
+                tarif:       'Tarif par séance (GNF)',
+                unites:      ['/ séance', '/ heure', '/ mois']
             }
         };
 
         document.getElementById('label-competences').textContent = labels[role].competences;
-        document.getElementById('label-tarif').textContent = labels[role].tarif;
+        document.getElementById('label-tarif').textContent       = labels[role].tarif;
 
         const sel = document.getElementById('select-unite');
         sel.innerHTML = '';
@@ -289,18 +269,22 @@ function adapterChamps(role) {
         });
 
     } else if (role === 'entreprise') {
-        document.getElementById('champs-entreprise').style.display = 'block';
-        document.getElementById('champ-prenom').style.display = 'none';
+        document.getElementById('champs-entreprise').style.display    = 'block';
+        document.getElementById('champ-nom').style.display            = 'none';
+        document.getElementById('champ-prenom').style.display         = 'none';
         document.getElementById('champ-raison-sociale').style.display = 'block';
     }
     // particulier — aucun champ supplémentaire
 }
 
-// Activer le rôle déjà sélectionné au rechargement (old())
+// Restaurer après erreur de validation
 const roleSelectionne = document.querySelector('input[name="role"]:checked');
 if (roleSelectionne) {
-    roleSelectionne.closest('label').style.border = '2px solid #1A9B5A';
-    roleSelectionne.closest('label').style.background = '#E6F7EE';
+    const carte = document.querySelector(`label[data-role="${roleSelectionne.value}"]`);
+    if (carte) {
+        carte.style.border     = '2px solid #1A9B5A';
+        carte.style.background = '#E6F7EE';
+    }
     adapterChamps(roleSelectionne.value);
 }
 </script>

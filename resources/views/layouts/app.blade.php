@@ -24,7 +24,7 @@
 
         /* NAVBAR */
         .navbar {
-            background: var(--bleu-fonce);
+            background: var(--vert-clair);
             padding: 0 28px;
             display: flex;
             align-items: center;
@@ -37,13 +37,13 @@
         }
         .navbar-logo { height: 48px; object-fit: contain; }
         .navbar-links { display: flex; align-items: center; gap: 20px; }
-        .navbar-links a { font-size: 14px; color: #B5C8D8; }
-        .navbar-links a:hover { color: #fff; }
-        .navbar-links a.active { color: #fff; border-bottom: 2px solid var(--orange); padding-bottom: 2px; }
+        .navbar-links a { font-size: 14px; color: var(--bleu-fonce); }
+        .navbar-links a:hover { color: var(--bleu-fonce); }
+        .navbar-links a.active { color: var(--bleu-fonce); border-bottom: 2px solid var(--orange); padding-bottom: 2px; }
         .btn-primary { background: var(--vert-moyen); color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
         .btn-primary:hover { background: var(--vert-fonce); }
         .btn-orange { background: var(--orange); color: var(--bleu-fonce); border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
-        .btn-outline-blanc { background: transparent; color: #fff; border: 2px solid #fff; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+        .btn-outline-blanc { background: transparent; color: #fff; border: 2px solid var(--bleu-fonce); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; }
 
         /* ALERTS */
         .alert-success { background: var(--vert-clair); border-left: 4px solid var(--vert-moyen); color: var(--vert-fonce); padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
@@ -59,7 +59,7 @@
 <body style="min-height:100vh;display:flex;flex-direction:column;">
 
 <!-- NAVBAR -->
-<nav class="navbar">
+<nav class="navbar " >
     <a href="{{ route('home') }}">
         <img src="{{ asset('images/logo.png') }}" alt="JobLinkGN" class="navbar-logo"
              onerror="this.outerHTML='<span style=\'color:#fff;font-size:18px;font-weight:700;\'>JobLink<span style=\'color:var(--orange)\'>GN</span></span>'">
@@ -74,16 +74,16 @@
                 {{ strtoupper(substr(Auth::user()->profile->nom ?? 'U', 0, 1)) }}{{ strtoupper(substr(Auth::user()->profile->prenom ?? '', 0, 1)) }}
             </div>
             <div>
-                <div style="font-size:13px;font-weight:700;color:#fff;">{{ Auth::user()->profile->nom ?? 'Utilisateur' }}</div>
+                <div style="font-size:13px;font-weight:700;color:black;">{{ Auth::user()->profile->nom ?? 'Utilisateur' }}</div>
                 <div style="font-size:11px;color:var(--orange);">{{ ucfirst(Auth::user()->role) }}</div>
             </div>
-            <a href="{{ route('dashboard') }}" style="font-size:13px;color:#B5C8D8;margin-left:8px;">Dashboard</a>
+            <a href="{{ route('dashboard') }}" class="btn-outline-blanc" style="font-size:13px;color:#0D2137;margin-left:8px;">Dashboard</a>
             <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                 @csrf
-                <button type="submit" style="background:transparent;border:none;color:#B5C8D8;font-size:13px;cursor:pointer;">Déconnexion</button>
+                <button type="submit" class="btn-orange">Déconnexion</button>
             </form>
         @else
-            <a href="{{ route('login') }}" class="btn-outline-blanc">Connexion</a>
+            <a href="{{ route('login') }}" class="btn-outline-blanc" style="color: #0D2137;">Connexion</a>
             <a href="{{ route('register') }}" class="btn-orange">S'inscrire</a>
         @endauth
     </div>
