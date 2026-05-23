@@ -10,6 +10,7 @@ use App\Http\Controllers\CandidatureController;
 use App\Http\Controllers\DemandeContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminController;
+use Illuminate\Support\Facades\Mail;
 
 // =======================================
 // ROUTES PUBLIQUES SANS PARAMÈTRES
@@ -121,3 +122,16 @@ Route::middleware(['auth', 'check.statut', 'role:admin'])
 
 Route::get('/services/{id}', [ServiceController::class, 'show'])->name('service.show');
 Route::get('/offres/{id}', [OffreController::class, 'show'])->name('offre.show');
+
+Route::get('/test-mail', function () 
+{
+
+    Mail::raw('Ceci est un test Laravel', function ($message) {
+
+        $message->to('salioumsd37@gmail.com')
+                ->subject('Test Laravel');
+
+    });
+
+    return 'Mail envoyé';
+});

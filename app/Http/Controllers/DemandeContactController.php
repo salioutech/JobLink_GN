@@ -39,7 +39,7 @@ class DemandeContactController extends Controller
     }
 
     // Envoyer une demande de contact
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $request->validate([
             'offreur_id' => 'required|exists:users,id',
@@ -55,14 +55,19 @@ class DemandeContactController extends Controller
             return back()->withErrors(['offreur_id' => 'Vous avez déjà contacté ce prestataire.']);
         }
 
-        DemandeContact::create([
-        'demandeur_id' => Auth::id(),
-        'offreur_id'   => $request->offreur_id,
-        'message'      => $request->message,
-        'statut'       => 'en_attente',
-    ]);
+        // Créer la demande
+        $demande = DemandeContact::create([
+            'demandeur_id' => Auth::id(),
+            'offreur_id'   => $request->offreur_id,
+            'message'      => $request->message,
+            'statut'       => 'en_attente',
+        ]);
 
-    return back()->with('success', 'Demande de contact envoyée !');
+        // Envoyer l'email à l'offreur
+        $demande->load(['demandeur.profile', 'offreur.profile']);
+        Mail::to('rouguiata171@gmail.com')->send(new DemandeContactMail($demande));
+
+        return back()->with('success', 'Demande de contact envoyée ! Le prestataire a été notifié par email.');
     }
 
     // Accepter ou refuser (offreur)

@@ -25,7 +25,7 @@
         /* NAVBAR */
         .navbar {
             background: var(--vert-clair);
-            padding: 0 28px;
+            padding: 0 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
