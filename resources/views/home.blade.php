@@ -100,12 +100,17 @@
                     $favoriCount = $service->favoris()->count();
                     $commCount   = $service->commentaires()->count();
                 @endphp
-                <div style="background:#fff;border-radius:10px;border:1px solid #E2E8F0;overflow:hidden;border-top:3px solid #1A4B7A;">
 
-                    {{-- INFOS PRESTATAIRE --}}
+                <div onclick="window.location='{{ route('service.show', $service->id) }}'"
+                    style="background:#fff;border-radius:10px;border:1px solid #E2E8F0;overflow:hidden;border-top:3px solid #1A4B7A;cursor:pointer;"
+                    onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.10)'"
+                    onmouseout="this.style.boxShadow='none'">
+
                     <div style="padding:16px 16px 12px;">
                         <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                            <a href="{{ route('profil.show', $service->user_id) }}" style="text-decoration:none;display:flex;align-items:center;gap:10px;flex:1;">
+                            <a href="{{ route('profil.show', $service->user_id) }}"
+                                onclick="event.stopPropagation()"
+                                style="text-decoration:none;display:flex;align-items:center;gap:10px;flex:1;">
                                 <div style="width:44px;height:44px;border-radius:50%;background:#F0A500;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#0D2137;flex-shrink:0;">
                                     {{ strtoupper(substr($service->user->profile->nom ?? 'U', 0, 1)) }}{{ strtoupper(substr($service->user->profile->prenom ?? '', 0, 1)) }}
                                 </div>
@@ -121,11 +126,9 @@
                             <span style="background:#E6F7EE;color:#0A6B3A;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600;flex-shrink:0;">Dispo</span>
                         </div>
 
-                        <a href="{{ route('service.show', $service->id) }}" style="text-decoration:none;">
-                            <div style="font-size:13px;font-weight:700;color:#0D2137;margin-bottom:6px;">{{ $service->titre }}</div>
-                        </a>
+                        <div style="font-size:13px;font-weight:700;color:#0D2137;margin-bottom:6px;">{{ $service->titre }}</div>
 
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
                             <span style="font-size:13px;font-weight:700;color:#1A9B5A;">
                                 {{ $service->tarif ? number_format($service->tarif, 0, ',', ' ').' GNF' : 'À négocier' }}
                             </span>
@@ -140,7 +143,8 @@
 
                         {{-- LIKE --}}
                         @auth
-                            <form method="POST" action="{{ route('like.toggle') }}" style="display:inline;">
+                            <form method="POST" action="{{ route('like.toggle') }}"
+                                onclick="event.stopPropagation()" style="display:inline;">
                                 @csrf
                                 <input type="hidden" name="type" value="service">
                                 <input type="hidden" name="id" value="{{ $service->id }}">
@@ -149,20 +153,23 @@
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;background:transparent;color:#5a6a7a;font-size:12px;font-weight:600;text-decoration:none;">
+                            <button onclick="event.stopPropagation(); afficherAlerte()"
+                                style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#5a6a7a;cursor:pointer;font-size:12px;font-weight:600;">
                                 🤍 {{ $likeCount }}
-                            </a>
+                            </button>
                         @endauth
 
                         {{-- COMMENTER --}}
                         <a href="{{ route('service.show', $service->id) }}#commentaires"
+                            onclick="event.stopPropagation()"
                             style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;background:transparent;color:#5a6a7a;font-size:12px;font-weight:600;text-decoration:none;">
                             💬 {{ $commCount }}
                         </a>
 
                         {{-- FAVORI --}}
                         @auth
-                            <form method="POST" action="{{ route('favori.toggle') }}" style="display:inline;">
+                            <form method="POST" action="{{ route('favori.toggle') }}"
+                                onclick="event.stopPropagation()" style="display:inline;">
                                 @csrf
                                 <input type="hidden" name="type" value="service">
                                 <input type="hidden" name="id" value="{{ $service->id }}">
@@ -171,27 +178,19 @@
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;background:transparent;color:#5a6a7a;font-size:12px;font-weight:600;text-decoration:none;">
+                            <button onclick="event.stopPropagation(); afficherAlerte()"
+                                style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#5a6a7a;cursor:pointer;font-size:12px;font-weight:600;">
                                 📌 {{ $favoriCount }}
-                            </a>
+                            </button>
                         @endauth
 
                         {{-- PARTAGER --}}
-                        <button onclick="partager('{{ $service->titre }}', '{{ route('service.show', $service->id) }}')"
+                        <button onclick="event.stopPropagation(); partager('{{ $service->titre }}', '{{ route('service.show', $service->id) }}')"
                             style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#5a6a7a;cursor:pointer;font-size:12px;font-weight:600;">
                             🔗
                         </button>
 
-                        {{-- SPACER --}}
-                        <div style="flex:1;"></div>
-
-                        {{-- VOIR LE SERVICE --}}
-                        <a href="{{ route('service.show', $service->id) }}"
-                            style="background:#1A9B5A;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;">
-                            Voir →
-                        </a>
                     </div>
-
                 </div>
             @endforeach
         </div>
@@ -222,9 +221,12 @@
                     $favoriCountO = $offre->favoris()->count();
                     $commCountO   = $offre->commentaires()->count();
                 @endphp
-                <div style="background:#F4F6F9;border-radius:10px;border:1px solid #E2E8F0;overflow:hidden;border-left:4px solid #1A4B7A;">
 
-                    {{-- INFOS OFFRE --}}
+                <div onclick="window.location='{{ route('offre.show', $offre->id) }}'"
+                    style="background:#F4F6F9;border-radius:10px;border:1px solid #E2E8F0;overflow:hidden;border-left:4px solid #1A4B7A;cursor:pointer;"
+                    onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.10)'"
+                    onmouseout="this.style.boxShadow='none'">
+
                     <div style="padding:16px 16px 12px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
                             <span style="background:#E8F0F9;color:#1A4B7A;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;">
@@ -233,15 +235,13 @@
                             <span style="font-size:11px;color:#5a6a7a;">{{ $offre->created_at->diffForHumans() }}</span>
                         </div>
 
-                        <a href="{{ route('offre.show', $offre->id) }}" style="text-decoration:none;">
-                            <div style="font-size:14px;font-weight:700;color:#0D2137;margin-bottom:6px;">{{ $offre->titre }}</div>
-                        </a>
+                        <div style="font-size:14px;font-weight:700;color:#0D2137;margin-bottom:6px;">{{ $offre->titre }}</div>
 
                         <div style="font-size:12px;color:#5a6a7a;margin-bottom:10px;line-height:1.5;">
                             {{ Str::limit($offre->description, 80) }}
                         </div>
 
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
                             <span style="font-size:12px;color:#5a6a7a;">📍 {{ $offre->user->profile->localisation ?? 'Conakry' }}</span>
                             <span style="font-size:13px;font-weight:700;color:#1A9B5A;">
                                 {{ $offre->budget ? number_format($offre->budget, 0, ',', ' ').' GNF' : 'À négocier' }}
@@ -254,7 +254,8 @@
 
                         {{-- LIKE --}}
                         @auth
-                            <form method="POST" action="{{ route('like.toggle') }}" style="display:inline;">
+                            <form method="POST" action="{{ route('like.toggle') }}"
+                                onclick="event.stopPropagation()" style="display:inline;">
                                 @csrf
                                 <input type="hidden" name="type" value="offre">
                                 <input type="hidden" name="id" value="{{ $offre->id }}">
@@ -263,20 +264,23 @@
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;background:transparent;color:#5a6a7a;font-size:12px;font-weight:600;text-decoration:none;">
+                            <button onclick="event.stopPropagation(); afficherAlerte()"
+                                style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#5a6a7a;cursor:pointer;font-size:12px;font-weight:600;">
                                 🤍 {{ $likeCountO }}
-                            </a>
+                            </button>
                         @endauth
 
                         {{-- COMMENTER --}}
                         <a href="{{ route('offre.show', $offre->id) }}#commentaires"
+                            onclick="event.stopPropagation()"
                             style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;background:transparent;color:#5a6a7a;font-size:12px;font-weight:600;text-decoration:none;">
                             💬 {{ $commCountO }}
                         </a>
 
                         {{-- FAVORI --}}
                         @auth
-                            <form method="POST" action="{{ route('favori.toggle') }}" style="display:inline;">
+                            <form method="POST" action="{{ route('favori.toggle') }}"
+                                onclick="event.stopPropagation()" style="display:inline;">
                                 @csrf
                                 <input type="hidden" name="type" value="offre">
                                 <input type="hidden" name="id" value="{{ $offre->id }}">
@@ -285,13 +289,14 @@
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;background:transparent;color:#5a6a7a;font-size:12px;font-weight:600;text-decoration:none;">
+                            <button onclick="event.stopPropagation(); afficherAlerte()"
+                                style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#5a6a7a;cursor:pointer;font-size:12px;font-weight:600;">
                                 📌 {{ $favoriCountO }}
-                            </a>
+                            </button>
                         @endauth
 
                         {{-- PARTAGER --}}
-                        <button onclick="partager('{{ $offre->titre }}', '{{ route('offre.show', $offre->id) }}')"
+                        <button onclick="event.stopPropagation(); partager('{{ $offre->titre }}', '{{ route('offre.show', $offre->id) }}')"
                             style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:6px;border:none;background:transparent;color:#5a6a7a;cursor:pointer;font-size:12px;font-weight:600;">
                             🔗
                         </button>
@@ -299,31 +304,26 @@
                         {{-- SPACER --}}
                         <div style="flex:1;"></div>
 
-                        {{-- POSTULER / VOIR --}}
+                        {{-- POSTULER --}}
                         @auth
                             @if(Auth::user()->isOffreur())
-                                <form method="POST" action="{{ route('candidature.store') }}" style="display:inline;">
+                                <form method="POST" action="{{ route('candidature.store') }}"
+                                    onclick="event.stopPropagation()" style="display:inline;">
                                     @csrf
                                     <input type="hidden" name="offre_id" value="{{ $offre->id }}">
                                     <button type="submit" style="background:#1A4B7A;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">
                                         Postuler
                                     </button>
                                 </form>
-                            @else
-                                <a href="{{ route('offre.show', $offre->id) }}"
-                                    style="background:#1A4B7A;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;">
-                                    Voir →
-                                </a>
                             @endif
                         @else
-                            <a href="{{ route('login') }}"
-                                style="background:#1A4B7A;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;">
+                            <button onclick="event.stopPropagation(); afficherAlerte()"
+                                style="background:#1A4B7A;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">
                                 Postuler
-                            </a>
+                            </button>
                         @endauth
 
                     </div>
-
                 </div>
             @endforeach
         </div>
@@ -373,8 +373,43 @@
     </div>
 </div>
 
+{{-- MODAL ALERTE CONNEXION --}}
+<div id="modal-alerte-connexion"
+    style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;padding:32px 28px;width:100%;max-width:400px;margin:20px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.2);">
+        <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+        <h3 style="font-size:18px;font-weight:700;color:#0D2137;margin-bottom:10px;">Connexion requise</h3>
+        <p style="font-size:14px;color:#5a6a7a;line-height:1.7;margin-bottom:24px;">
+            Vous devez être connecté pour effectuer cette action.<br>
+            Rejoignez JobLink GN gratuitement !
+        </p>
+        <div style="display:flex;gap:10px;justify-content:center;">
+            <a href="{{ route('login') }}"
+                style="background:#1A9B5A;color:#fff;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;">
+                Se connecter
+            </a>
+            <a href="{{ route('register') }}"
+                style="background:#F0A500;color:#0D2137;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;">
+                S'inscrire
+            </a>
+        </div>
+        <button onclick="document.getElementById('modal-alerte-connexion').style.display='none'"
+            style="margin-top:16px;background:transparent;border:none;color:#5a6a7a;font-size:13px;cursor:pointer;text-decoration:underline;">
+            Fermer
+        </button>
+    </div>
+</div>
+
 @push('scripts')
 <script>
+function afficherAlerte() {
+    document.getElementById('modal-alerte-connexion').style.display = 'flex';
+}
+
+document.getElementById('modal-alerte-connexion').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+});
+
 function partager(titre, url) {
     if (navigator.share) {
         navigator.share({ title: titre, url: url });
