@@ -22,6 +22,7 @@
         <a href="{{ route('offre.create') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">📢 Mes offres</a>
         <a href="{{ route('candidature.received') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">👥 Candidatures reçues</a>
         <a href="{{ route('demande.sent') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🤝 Demandes envoyées</a>
+        <a href="{{ route('favori.index') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🔖 Mes favoris</a>
         <a href="{{ route('search') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🔍 Rechercher des talents</a>
         <div style="margin-top:auto;padding-top:16px;border-top:1px solid #E2E8F0;">
             <form method="POST" action="{{ route('logout') }}">
@@ -54,7 +55,7 @@
         @endif
 
         {{-- STATS --}}
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">
             <div style="background:#fff;border-radius:10px;border:1px solid #E2E8F0;padding:16px;text-align:center;border-top:3px solid #1A4B7A;">
                 <div style="font-size:28px;font-weight:700;color:#0D2137;">{{ $offres->count() }}</div>
                 <div style="font-size:12px;color:#5a6a7a;margin-top:4px;">Offres publiées</div>
@@ -70,6 +71,11 @@
                 <div style="font-size:12px;color:#5a6a7a;margin-top:4px;">Prestataires contactés</div>
                 <div style="font-size:11px;color:#1A9B5A;margin-top:2px;">{{ $demandes->where('statut','acceptee')->count() }} acceptées</div>
             </div>
+            <div style="background:#fff;border-radius:10px;border:1px solid #E2E8F0;padding:16px;text-align:center;border-top:3px solid #F0A500;">
+                <div style="font-size:28px;font-weight:700;color:#F0A500;">{{ $favoris->count() }}</div>
+                <div style="font-size:12px;color:#5a6a7a;margin-top:4px;">Favoris</div>
+                <div style="font-size:11px;color:#5a6a7a;margin-top:2px;">sauvegardés</div>
+            </div>
         </div>
 
         {{-- MES OFFRES --}}
@@ -78,7 +84,6 @@
                 <h2 style="font-size:15px;font-weight:700;color:#0D2137;">Mes offres publiées</h2>
                 <a href="{{ route('offre.create') }}" style="font-size:12px;color:#1A9B5A;font-weight:600;text-decoration:none;">+ Nouvelle offre</a>
             </div>
-
             @if($offres->count() > 0)
                 <div style="display:flex;flex-direction:column;gap:10px;">
                     @foreach($offres as $offre)
@@ -121,12 +126,11 @@
         </div>
 
         {{-- CANDIDATURES RÉCENTES --}}
-        <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
+        <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;margin-bottom:20px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
                 <h2 style="font-size:15px;font-weight:700;color:#0D2137;">Dernières candidatures reçues</h2>
                 <a href="{{ route('candidature.received') }}" style="font-size:12px;color:#1A9B5A;font-weight:600;text-decoration:none;">Voir tout →</a>
             </div>
-
             @if($candidatures->count() > 0)
                 <div style="display:flex;flex-direction:column;gap:10px;">
                     @foreach($candidatures->take(3) as $candidature)
@@ -172,6 +176,55 @@
             @else
                 <div style="text-align:center;padding:24px;color:#5a6a7a;">
                     <div style="font-size:13px;">Aucune candidature reçue pour le moment.</div>
+                </div>
+            @endif
+        </div>
+
+        {{-- MES FAVORIS --}}
+        <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <h2 style="font-size:15px;font-weight:700;color:#0D2137;">🔖 Mes favoris</h2>
+                <a href="{{ route('favori.index') }}" style="font-size:12px;color:#1A9B5A;font-weight:600;text-decoration:none;">Voir tout →</a>
+            </div>
+            @if($favoris->count() > 0)
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+                    @foreach($favoris->take(4) as $favori)
+                        @php $item = $favori->favorable; @endphp
+                        @if($item)
+                            <div style="background:#F4F6F9;border-radius:8px;padding:14px;border-left:3px solid #F0A500;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+                                <div style="flex:1;">
+                                    <div style="font-size:11px;color:#5a6a7a;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">
+                                        {{ class_basename($favori->favorable_type) === 'Service' ? '🛠️ Service' : '💼 Offre' }}
+                                    </div>
+                                    <div style="font-size:13px;font-weight:700;color:#0D2137;margin-bottom:4px;">{{ $item->titre }}</div>
+                                    <div style="font-size:12px;color:#1A9B5A;font-weight:600;">
+                                        {{ isset($item->tarif) ? number_format($item->tarif, 0, ',', ' ').' GNF' : (isset($item->budget) && $item->budget ? number_format($item->budget, 0, ',', ' ').' GNF' : 'À négocier') }}
+                                    </div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+                                    <a href="{{ class_basename($favori->favorable_type) === 'Service' ? route('service.show', $item->id) : route('offre.show', $item->id) }}"
+                                        style="font-size:11px;padding:4px 10px;border-radius:6px;background:#E8F0F9;color:#1A4B7A;text-decoration:none;font-weight:600;text-align:center;">
+                                        Voir
+                                    </a>
+                                    <form method="POST" action="{{ route('favori.toggle') }}">
+                                        @csrf
+                                        <input type="hidden" name="type" value="{{ strtolower(class_basename($favori->favorable_type)) }}">
+                                        <input type="hidden" name="id" value="{{ $item->id }}">
+                                        <button type="submit" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #fcc;background:#fff;color:#c0392b;cursor:pointer;width:100%;">🗑</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            @else
+                <div style="text-align:center;padding:32px;color:#5a6a7a;">
+                    <div style="font-size:32px;margin-bottom:10px;">🔖</div>
+                    <div style="font-size:14px;font-weight:600;margin-bottom:6px;">Aucun favori sauvegardé</div>
+                    <a href="{{ route('search') }}"
+                        style="background:#F0A500;color:#0D2137;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+                        Explorer les publications
+                    </a>
                 </div>
             @endif
         </div>

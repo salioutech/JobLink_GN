@@ -28,11 +28,13 @@
             <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:10px;">
                 Vous êtes... <span style="color:#c0392b;">*</span>
             </label>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
                 @foreach([
-                    'freelance'   => ['💼', 'Freelance',   'Dev, artisan, tuteur...'],
-                    'entreprise'  => ['🏢', 'Entreprise',  'PME, ONG, startup...'],
-                    'particulier' => ['👤', 'Particulier', 'Besoin ponctuel'],
+                    'consultant'  => ['💼', 'Consultant',  'Dev, design, compta...'],
+                    'artisan'     => ['🔧', 'Artisan',      'Élec, plomb, couture...'],
+                    'tuteur'      => ['🎓', 'Tuteur',       'Cours, soutien scolaire'],
+                    'entreprise'  => ['🏢', 'Entreprise',   'PME, ONG, startup...'],
+                    'particulier' => ['👤', 'Particulier',  'Besoin ponctuel'],
                 ] as $value => $info)
                     <label data-role="{{ $value }}"
                         style="border:2px solid {{ old('role') === $value ? '#1A9B5A' : '#E2E8F0' }};border-radius:10px;padding:12px 6px;text-align:center;cursor:pointer;background:{{ old('role') === $value ? '#E6F7EE' : '#fff' }};">
@@ -180,14 +182,49 @@ cartes.forEach(carte => {
 });
 
 function adapterChamps(role) {
-    if (role === 'entreprise') {
-        // Afficher formulaire entreprise, cacher freelance/particulier
-        document.getElementById('champs-freelance-particulier').style.display = 'none';
-        document.getElementById('champs-entreprise').style.display            = 'block';
-    } else {
-        // Afficher formulaire freelance/particulier, cacher entreprise
-        document.getElementById('champs-freelance-particulier').style.display = 'block';
-        document.getElementById('champs-entreprise').style.display            = 'none';
+    document.getElementById('champs-offreur').style.display       = 'none';
+    document.getElementById('champs-entreprise').style.display    = 'none';
+    document.getElementById('champ-nom').style.display            = 'block';
+    document.getElementById('champ-prenom').style.display         = 'block';
+    document.getElementById('champ-raison-sociale').style.display = 'none';
+
+    if (['consultant', 'artisan', 'tuteur'].includes(role)) {
+        document.getElementById('champs-offreur').style.display = 'block';
+
+        const labels = {
+            consultant: {
+                competences: 'Compétences (ex: Laravel, Design, Comptabilité...)',
+                tarif:       'Tarif horaire ou par projet (GNF)',
+                unites:      ['/ heure', '/ jour', '/ projet']
+            },
+            artisan: {
+                competences: "Domaine d'activité (ex: Électricité, Plomberie...)",
+                tarif:       'Tarif journalier ou par intervention (GNF)',
+                unites:      ['/ jour', '/ intervention', '/ heure']
+            },
+            tuteur: {
+                competences: 'Matières enseignées (ex: Maths, Physique, Anglais...)',
+                tarif:       'Tarif par séance (GNF)',
+                unites:      ['/ séance', '/ heure', '/ mois']
+            }
+        };
+
+        document.getElementById('label-competences').textContent = labels[role].competences;
+        document.getElementById('label-tarif').textContent       = labels[role].tarif;
+
+        const sel = document.getElementById('select-unite');
+        sel.innerHTML = '';
+        labels[role].unites.forEach(u => {
+            const o = document.createElement('option');
+            o.text = u; o.value = u;
+            sel.add(o);
+        });
+
+    } else if (role === 'entreprise') {
+        document.getElementById('champs-entreprise').style.display    = 'block';
+        document.getElementById('champ-nom').style.display            = 'none';
+        document.getElementById('champ-prenom').style.display         = 'none';
+        document.getElementById('champ-raison-sociale').style.display = 'block';
     }
 }
 

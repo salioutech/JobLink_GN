@@ -45,12 +45,21 @@ class FavoriController extends Controller
         return back()->with('success', $saved ? 'Ajouté aux favoris !' : 'Retiré des favoris.');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $favoris = Favori::where('user_id', Auth::id())
+        $query = Favori::where('user_id', Auth::id())
             ->with('favorable')
-            ->latest()
-            ->paginate(10);
+            ->latest();
+
+        // Filtre par type
+        if ($request->type && $request->type !== 'tous') {
+            $class = $request->type === 'service'
+                ? 'App\\Models\\Service'
+                : 'App\\Models\\Offre';
+            $query->where('favorable_type', $class);
+        }
+
+        $favoris = $query->paginate(10);
 
         return view('favoris.index', compact('favoris'));
     }

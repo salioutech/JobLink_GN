@@ -29,7 +29,7 @@ class RegisteredUserController extends Controller
             'raison_sociale' => 'required_if:role,entreprise|nullable|string|max:200',
             'email'          => 'required|string|email|max:255|unique:users',
             'password'       => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
-            'role'           => 'required|in:freelance,entreprise,particulier', // ← artisan et tuteur supprimés
+            'role' => 'required|in:consultant,artisan,tuteur,entreprise,particulier',
             'telephone'      => 'nullable|string|max:20',
             'commune'        => 'nullable|string|max:100',
             'secteur_activite' => 'required_if:role,entreprise|nullable|string|max:100',
@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
         ]);
 
         // 3. Champs spécifiques Freelance uniquement
-        if ($request->role === 'freelance') {
+        if (in_array($request->role, ['consultant', 'artisan', 'tuteur'])) {
             ProfilDetail::create([
                 'profile_id'    => $profile->id,
                 'competences'   => $request->competences,

@@ -15,7 +15,9 @@
         </div>
         <a href="{{ route('dashboard') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🏠 Tableau de bord</a>
         <a href="{{ route('profil.edit') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">👤 Mon profil</a>
-        <a href="{{ route('service.create') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#0D2137;font-weight:700;background:#E8F0F9;text-decoration:none;">🛠️ Mes services</a>
+        <a href="{{ route('service.create') }}" style="...">
+            {{ Auth::user()->role === 'tuteur' ? '🎓 Mes cours' : '🛠️ Mes services' }}
+        </a>
         <a href="{{ route('candidature.index') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">📩 Mes candidatures</a>
     </div>
 

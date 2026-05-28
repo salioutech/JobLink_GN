@@ -15,7 +15,9 @@
         </div>
         <a href="{{ route('dashboard') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🏠 Tableau de bord</a>
         <a href="{{ route('profil.edit') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">👤 Mon profil</a>
-        <a href="{{ route('service.create') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#0D2137;font-weight:700;background:#E8F0F9;text-decoration:none;">🛠️ Mes services</a>
+        <a href="{{ route('service.create') }}" style="...">
+            {{ Auth::user()->role === 'tuteur' ? '🎓 Mes cours' : '🛠️ Mes services' }}
+        </a>
         <a href="{{ route('candidature.index') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">📩 Mes candidatures</a>
     </div>
 
@@ -30,7 +32,7 @@
 
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
             <div>
-                <h1 style="font-size:20px;font-weight:700;color:#0D2137;margin-bottom:4px;">Publier un nouveau service</h1>
+                <h1 style="font-size:20px;font-weight:700;color:#0D2137;margin-bottom:4px;">{{ Auth::user()->role === 'tuteur' ? 'Publier un cours' : 'Publier un service' }}</h1>
                 <p style="font-size:13px;color:#5a6a7a;">Décrivez votre service pour être visible dans les résultats de recherche</p>
             </div>
             <a href="{{ route('dashboard') }}" style="font-size:13px;color:#5a6a7a;text-decoration:none;">← Retour</a>
@@ -67,16 +69,46 @@
                 </div>
 
                 <div style="margin-bottom:16px;">
-                    <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Catégorie <span style="color:#c0392b;">*</span></label>
-                    <select name="categorie_id"
-                        style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-                        <option value="">-- Sélectionnez une catégorie --</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}" {{ old('categorie_id') == $cat->id ? 'selected' : '' }}>
-                                {{ $cat->nom }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">
+                        {{ Auth::user()->role === 'tuteur' ? 'Matière' : 'Catégorie' }}
+                        <span style="color:#c0392b;">*</span>
+                    </label>
+
+                    @if(Auth::user()->role === 'tuteur')
+                        {{-- MATIÈRES POUR LES TUTEURS --}}
+                        <select name="categorie_id" style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                            <option value="">-- Sélectionnez une matière --</option>
+                            @foreach([
+                                'Mathématiques',
+                                'Physique',
+                                'Chimie',
+                                'Français',
+                                'Anglais',
+                                'Histoire-Géographie',
+                                'SVT',
+                                'Philosophie',
+                                'Informatique',
+                                'Économie',
+                                'Comptabilité',
+                                'Arabe',
+                                'Autre matière'
+                            ] as $matiere)
+                                <option value="{{ $matiere }}" {{ old('categorie_id') == $matiere ? 'selected' : '' }}>
+                                    {{ $matiere }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @else
+                        {{-- CATÉGORIES POUR LES AUTRES RÔLES --}}
+                        <select name="categorie_id" style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                            <option value="">-- Sélectionnez une catégorie --</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}" {{ old('categorie_id') == $cat->id ? 'selected' : '' }}>
+                                    {{ $cat->nom }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
                 </div>
 
                 <div style="margin-bottom:16px;">

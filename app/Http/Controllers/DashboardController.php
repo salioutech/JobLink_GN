@@ -3,48 +3,62 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use App\Models\Favori;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-         /** @var \App\Models\User $user */
+        /** @var \App\Models\User $user */
         $user = Auth::user()->load('profile');
 
         return match($user->role) {
-            'freelance'  => $this->dashboardFreelance($user),
-            'artisan'    => $this->dashboardArtisan($user),
-            'tuteur'     => $this->dashboardTuteur($user),
-            'entreprise' => $this->dashboardEntreprise($user),
-            'particulier'=> $this->dashboardParticulier($user),
-            'admin'      => redirect()->route('admin.dashboard'),
-            default      => redirect()->route('home'),
+            'consultant'  => $this->dashboardConsultant($user),
+            'artisan'     => $this->dashboardArtisan($user),
+            'tuteur'      => $this->dashboardTuteur($user),
+            'entreprise'  => $this->dashboardEntreprise($user),
+            'particulier' => $this->dashboardParticulier($user),
+            'admin'       => redirect()->route('admin.dashboard'),
+            default       => redirect()->route('home'),
         };
     }
 
-    private function dashboardFreelance($user)
+    private function getFavoris($user)
     {
-        $services      = $user->services()->with('categorie')->latest()->get();
-        $candidatures  = $user->candidatures()->with('offre.user.profile')->latest()->get();
-        $demandes      = $user->demandesRecues()->with('demandeur.profile')->latest()->get();
+        return Favori::where('user_id', $user->id)
+            ->with('favorable')
+            ->latest()
+            ->get();
+    }
 
-        return view('dashboard.freelance', compact('user', 'services', 'candidatures', 'demandes'));
+    private function dashboardConsultant($user)
+    {
+        $services     = $user->services()->with('categorie')->latest()->get();
+        $candidatures = $user->candidatures()->with('offre.user.profile')->latest()->get();
+        $demandes     = $user->demandesRecues()->with('demandeur.profile')->latest()->get();
+        $favoris      = $this->getFavoris($user);
+
+        return view('dashboard.consultant', compact('user', 'services', 'candidatures', 'demandes', 'favoris'));
     }
 
     private function dashboardArtisan($user)
     {
-        $services  = $user->services()->with('categorie')->latest()->get();
-        $demandes  = $user->demandesRecues()->with('demandeur.profile')->latest()->get();
+        $services     = $user->services()->with('categorie')->latest()->get();
+        $candidatures = $user->candidatures()->with('offre.user.profile')->latest()->get();
+        $demandes     = $user->demandesRecues()->with('demandeur.profile')->latest()->get();
+        $favoris      = $this->getFavoris($user);
 
-        return view('dashboard.artisan', compact('user', 'services', 'demandes'));
+        return view('dashboard.artisan', compact('user', 'services', 'candidatures', 'demandes', 'favoris'));
     }
 
     private function dashboardTuteur($user)
     {
-        $services  = $user->services()->with('categorie')->latest()->get();
-        $demandes  = $user->demandesRecues()->with('demandeur.profile')->latest()->get();
+        $services     = $user->services()->with('categorie')->latest()->get();
+        $candidatures = $user->candidatures()->with('offre.user.profile')->latest()->get();
+        $demandes     = $user->demandesRecues()->with('demandeur.profile')->latest()->get();
+        $favoris      = $this->getFavoris($user);
 
-        return view('dashboard.tuteur', compact('user', 'services', 'demandes'));
+        return view('dashboard.tuteur', compact('user', 'services', 'candidatures', 'demandes', 'favoris'));
     }
 
     private function dashboardEntreprise($user)
@@ -55,15 +69,17 @@ class DashboardController extends Controller
                             ->latest()
                             ->get();
         $demandes     = $user->demandesEnvoyees()->with('offreur.profile')->latest()->get();
+        $favoris      = $this->getFavoris($user);
 
-        return view('dashboard.entreprise', compact('user', 'offres', 'candidatures', 'demandes'));
+        return view('dashboard.entreprise', compact('user', 'offres', 'candidatures', 'demandes', 'favoris'));
     }
 
     private function dashboardParticulier($user)
     {
-        $offres       = $user->offres()->with('categorie')->withCount('candidatures')->latest()->get();
-        $demandes     = $user->demandesEnvoyees()->with('offreur.profile')->latest()->get();
+        $offres   = $user->offres()->with('categorie')->withCount('candidatures')->latest()->get();
+        $demandes = $user->demandesEnvoyees()->with('offreur.profile')->latest()->get();
+        $favoris  = $this->getFavoris($user);
 
-        return view('dashboard.particulier', compact('user', 'offres', 'demandes'));
+        return view('dashboard.particulier', compact('user', 'offres', 'demandes', 'favoris'));
     }
 }

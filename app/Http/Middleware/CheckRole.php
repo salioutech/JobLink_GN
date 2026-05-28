@@ -15,7 +15,7 @@ class CheckRole
 
         $allowed = match($role) {
             'admin'     => $user->role === 'admin',
-            'offreur'   => $user->role === 'freelance',             // ← artisan et tuteur supprimés
+            'offreur'   => in_array($user->role, ['consultant', 'artisan', 'tuteur']),
             'demandeur' => in_array($user->role, ['entreprise', 'particulier']),
             default     => false,
         };
