@@ -10,7 +10,10 @@ use App\Http\Controllers\CandidatureController;
 use App\Http\Controllers\DemandeContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminController;
-use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\CommentaireController;
+use App\Http\Controllers\NoteController;
+use App\Http\Controllers\FavoriController;
 
 // =======================================
 // ROUTES PUBLIQUES SANS PARAMÈTRES
@@ -39,7 +42,21 @@ Route::middleware(['auth', 'check.statut'])->group(function () {
     Route::get('/profil/edit', [ProfileController::class, 'edit'])->name('profil.edit');
     Route::put('/profil', [ProfileController::class, 'update'])->name('profil.update');
 
-    // ---- OFFREURS (freelance, artisan, tuteur) ----
+    // ---- LIKES ----
+    Route::post('/likes', [LikeController::class, 'toggle'])->name('like.toggle');
+
+    // ---- COMMENTAIRES ----
+    Route::post('/commentaires', [CommentaireController::class, 'store'])->name('commentaire.store');
+    Route::delete('/commentaires/{id}', [CommentaireController::class, 'destroy'])->name('commentaire.destroy');
+
+    // ---- NOTES ----
+    Route::post('/notes', [NoteController::class, 'store'])->name('note.store');
+
+    // ---- FAVORIS ----
+    Route::post('/favoris', [FavoriController::class, 'toggle'])->name('favori.toggle');
+    Route::get('/mes-favoris', [FavoriController::class, 'index'])->name('favori.index');
+
+    // ---- OFFREURS (freelance) ----
     Route::middleware('role:offreur')->group(function () {
 
         // Services
@@ -122,16 +139,3 @@ Route::middleware(['auth', 'check.statut', 'role:admin'])
 
 Route::get('/services/{id}', [ServiceController::class, 'show'])->name('service.show');
 Route::get('/offres/{id}', [OffreController::class, 'show'])->name('offre.show');
-
-Route::get('/test-mail', function () 
-{
-
-    Mail::raw('Ceci est un test Laravel', function ($message) {
-
-        $message->to('salioumsd37@gmail.com')
-                ->subject('Test Laravel');
-
-    });
-
-    return 'Mail envoyé';
-});

@@ -15,7 +15,8 @@ return new class extends Migration
         $table->id();
         $table->string('email', 255)->unique();
         $table->string('password', 255);
-        $table->enum('role', ['freelance','artisan','tuteur','entreprise','particulier','admin']);
+        //$table->enum('role', ['freelance','artisan','tuteur','entreprise','particulier','admin']);
+        $table->enum('role', ['freelance', 'entreprise', 'particulier','admin'])->default('particulier');
         $table->enum('statut', ['actif','suspendu','desactive'])->default('actif');
         $table->timestamp('email_verified_at')->nullable();
         $table->rememberToken();

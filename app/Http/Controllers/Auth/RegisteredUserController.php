@@ -29,9 +29,10 @@ class RegisteredUserController extends Controller
             'raison_sociale' => 'required_if:role,entreprise|nullable|string|max:200',
             'email'          => 'required|string|email|max:255|unique:users',
             'password'       => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
-            'role'           => 'required|in:freelance,artisan,tuteur,entreprise,particulier',
+            'role'           => 'required|in:freelance,entreprise,particulier', // ← artisan et tuteur supprimés
             'telephone'      => 'nullable|string|max:20',
             'commune'        => 'nullable|string|max:100',
+            'secteur_activite' => 'required_if:role,entreprise|nullable|string|max:100',
         ]);
 
         // 1. Créer le compte utilisateur
@@ -56,14 +57,14 @@ class RegisteredUserController extends Controller
             'completion_rate' => 30,
         ]);
 
-        // 3. Champs spécifiques Freelance / Artisan / Tuteur
-        if (in_array($request->role, ['freelance', 'artisan', 'tuteur'])) {
+        // 3. Champs spécifiques Freelance uniquement
+        if ($request->role === 'freelance') {
             ProfilDetail::create([
-                'profile_id'   => $profile->id,
-                'competences'  => $request->competences,
-                'tarif'        => $request->tarif,
-                'devise'       => 'GNF',
-                'disponibilite'=> $request->disponibilite ?? true,
+                'profile_id'    => $profile->id,
+                'competences'   => $request->competences,
+                'tarif'         => $request->tarif,
+                'devise'        => 'GNF',
+                'disponibilite' => $request->disponibilite ?? true,
             ]);
         }
 

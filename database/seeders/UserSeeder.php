@@ -54,73 +54,11 @@ class UserSeeder extends Seeder
         ProfilDetail::firstOrCreate(
             ['profile_id' => $profileFreelance->id],
             [
-                'competences'  => 'Laravel, PHP, MySQL, Vue.js, Bootstrap',
-                'tarif'        => 500000,
-                'devise'       => 'GNF',
-                'disponibilite'=> true,
-                'portfolio_url'=> null,
-            ]
-        );
-
-        // ========== ARTISAN ==========
-        $artisan = User::firstOrCreate(
-            ['email' => 'artisan@test.com'],
-            [
-                'password' => Hash::make('Test@1234'),
-                'role'     => 'artisan',
-                'statut'   => 'actif',
-            ]
-        );
-        $profileArtisan = Profile::firstOrCreate(
-            ['user_id' => $artisan->id],
-            [
-                'nom'             => 'Camara',
-                'prenom'          => 'Ibrahima',
-                'localisation'    => 'Matoto',
-                'telephone'       => '622000003',
-                'bio'             => 'Électricien qualifié avec 5 ans d\'expérience à Conakry',
-                'completion_rate' => 75,
-            ]
-        );
-        ProfilDetail::firstOrCreate(
-            ['profile_id' => $profileArtisan->id],
-            [
-                'competences'  => 'Électricité, Installation, Dépannage, Câblage',
-                'tarif'        => 300000,
-                'devise'       => 'GNF',
-                'disponibilite'=> true,
-                'portfolio_url'=> null,
-            ]
-        );
-
-        // ========== TUTEUR ==========
-        $tuteur = User::firstOrCreate(
-            ['email' => 'tuteur@test.com'],
-            [
-                'password' => Hash::make('Test@1234'),
-                'role'     => 'tuteur',
-                'statut'   => 'actif',
-            ]
-        );
-        $profileTuteur = Profile::firstOrCreate(
-            ['user_id' => $tuteur->id],
-            [
-                'nom'             => 'Barry',
-                'prenom'          => 'Fatoumata',
-                'localisation'    => 'Dixinn',
-                'telephone'       => '622000004',
-                'bio'             => 'Enseignante en mathématiques et physique, niveau lycée et université',
-                'completion_rate' => 80,
-            ]
-        );
-        ProfilDetail::firstOrCreate(
-            ['profile_id' => $profileTuteur->id],
-            [
-                'competences'  => 'Mathématiques, Physique, Chimie, Soutien scolaire',
-                'tarif'        => 150000,
-                'devise'       => 'GNF',
-                'disponibilite'=> true,
-                'portfolio_url'=> null,
+                'competences'   => 'Laravel, PHP, MySQL, Vue.js, Bootstrap',
+                'tarif'         => 500000,
+                'devise'        => 'GNF',
+                'disponibilite' => true,
+                'portfolio_url' => null,
             ]
         );
 
@@ -136,14 +74,14 @@ class UserSeeder extends Seeder
         Profile::firstOrCreate(
             ['user_id' => $entreprise->id],
             [
-                'nom'             => 'TechGuinée SARL',
-                'prenom'          => null,
-                'localisation'    => 'Kaloum',
-                'telephone'       => '622000002',
-                'bio'             => 'Entreprise spécialisée en solutions numériques pour la Guinée',
-                'secteur_activite'=> 'Informatique',
-                'taille_structure'=> 'PME',
-                'completion_rate' => 80,
+                'nom'              => 'TechGuinée SARL',
+                'prenom'           => null,
+                'localisation'     => 'Kaloum',
+                'telephone'        => '622000002',
+                'bio'              => 'Entreprise spécialisée en solutions numériques pour la Guinée',
+                'secteur_activite' => 'Informatique & Technologie',
+                'taille_structure' => 'PME (10–49 employés)',
+                'completion_rate'  => 80,
             ]
         );
 
@@ -163,7 +101,7 @@ class UserSeeder extends Seeder
                 'prenom'          => 'Aminata',
                 'localisation'    => 'Lambanyi',
                 'telephone'       => '622000005',
-                'bio'             => 'Particulier à la recherche de prestataires fiables à Conakry',
+                'bio'             => 'Particulière à la recherche de prestataires fiables à Conakry',
                 'completion_rate' => 60,
             ]
         );

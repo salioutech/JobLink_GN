@@ -23,17 +23,15 @@
     <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
 
-        {{-- CHOIX DU RÔLE --}}
+        {{-- CHOIX DU RÔLE — 3 rôles uniquement --}}
         <div style="margin-bottom:20px;">
             <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:10px;">
                 Vous êtes... <span style="color:#c0392b;">*</span>
             </label>
-            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
                 @foreach([
-                    'freelance'   => ['💻', 'Freelance',   'Dev, design...'],
-                    'artisan'     => ['🔧', 'Artisan',     'Élec, plomb...'],
-                    'tuteur'      => ['🎓', 'Tuteur',      'Cours, soutien'],
-                    'entreprise'  => ['🏢', 'Entreprise',  'PME, ONG...'],
+                    'freelance'   => ['💼', 'Freelance',   'Dev, artisan, tuteur...'],
+                    'entreprise'  => ['🏢', 'Entreprise',  'PME, ONG, startup...'],
                     'particulier' => ['👤', 'Particulier', 'Besoin ponctuel'],
                 ] as $value => $info)
                     <label data-role="{{ $value }}"
@@ -50,104 +48,71 @@
 
         <hr style="border:none;border-top:1px solid #E2E8F0;margin-bottom:20px;">
 
-        {{-- NOM — masqué pour entreprise --}}
-        <div id="champ-nom" style="margin-bottom:16px;">
-            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Nom <span style="color:#c0392b;">*</span></label>
-            <input type="text" name="nom" value="{{ old('nom') }}" placeholder="Ex: Diallo"
-                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-        </div>
+        {{-- FORMULAIRE FREELANCE ET PARTICULIER (identique) --}}
+        <div id="champs-freelance-particulier">
 
-        {{-- PRÉNOM — masqué pour entreprise --}}
-        <div id="champ-prenom" style="margin-bottom:16px;">
-            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Prénom</label>
-            <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Ex: Mamadou"
-                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-        </div>
-
-        {{-- RAISON SOCIALE — entreprise uniquement --}}
-        <div id="champ-raison-sociale" style="display:none;margin-bottom:16px;">
-            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Raison sociale <span style="color:#c0392b;">*</span></label>
-            <input type="text" name="raison_sociale" value="{{ old('raison_sociale') }}" placeholder="Ex: TechGuinée SARL"
-                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-        </div>
-
-        {{-- EMAIL --}}
-        <div style="margin-bottom:16px;">
-            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Adresse email <span style="color:#c0392b;">*</span></label>
-            <input type="email" name="email" value="{{ old('email') }}" placeholder="exemple@email.com"
-                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-        </div>
-
-        {{-- TÉLÉPHONE --}}
-        <div style="margin-bottom:16px;">
-            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Téléphone</label>
-            <div style="display:flex;gap:10px;">
-                <div style="padding:11px 12px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:13px;color:#5a6a7a;background:#f8f9fa;white-space:nowrap;">🇬🇳 +224</div>
-                <input type="tel" name="telephone" value="{{ old('telephone') }}" placeholder="622 000 000"
-                    style="flex:1;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-            </div>
-        </div>
-
-        {{-- COMMUNE --}}
-        <div style="margin-bottom:16px;">
-            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Commune <span style="color:#c0392b;">*</span></label>
-            <select name="commune" style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-                <option value="">-- Sélectionnez votre commune --</option>
-                @foreach(['Kaloum','Dixinn','Matam','Matoto','Ratoma','Lambanyi'] as $commune)
-                    <option value="{{ $commune }}" {{ old('commune') === $commune ? 'selected' : '' }}>{{ $commune }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- CHAMPS OFFREURS --}}
-        <div id="champs-offreur" style="display:none;">
-            <hr style="border:none;border-top:1px solid #E2E8F0;margin-bottom:16px;">
-            <div style="font-size:13px;font-weight:700;color:#0D2137;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
-                <span style="width:20px;height:20px;background:#1A4B7A;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">i</span>
-                Informations professionnelles
-            </div>
-            <div style="margin-bottom:16px;">
-                <label id="label-competences" style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Compétences</label>
-                <input type="text" name="competences" value="{{ old('competences') }}" placeholder="Séparez par des virgules"
+            {{-- NOM --}}
+            <div id="champ-nom" style="margin-bottom:16px;">
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Nom <span style="color:#c0392b;">*</span></label>
+                <input type="text" name="nom" value="{{ old('nom') }}" placeholder="Ex: Diallo"
                     style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
             </div>
-            <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:16px;">
-                <div>
-                    <label id="label-tarif" style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Tarif indicatif (GNF)</label>
-                    <input type="number" name="tarif" value="{{ old('tarif') }}" placeholder="Ex: 500000" min="0"
-                        style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-                </div>
-                <div>
-                    <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Unité</label>
-                    <select id="select-unite" name="unite_tarif"
-                        style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-                        <option>/ heure</option>
-                        <option>/ jour</option>
-                        <option>/ projet</option>
-                        <option>/ séance</option>
-                    </select>
-                </div>
+
+            {{-- PRÉNOM --}}
+            <div id="champ-prenom" style="margin-bottom:16px;">
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Prénom</label>
+                <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Ex: Mamadou"
+                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
             </div>
+
+            {{-- EMAIL --}}
             <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:8px;">Disponibilité</label>
-                <div style="display:flex;gap:16px;">
-                    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
-                        <input type="radio" name="disponibilite" value="1" checked> Disponible maintenant
-                    </label>
-                    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
-                        <input type="radio" name="disponibilite" value="0"> Indisponible
-                    </label>
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Adresse email <span style="color:#c0392b;">*</span></label>
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="exemple@email.com"
+                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+            </div>
+
+            {{-- TÉLÉPHONE --}}
+            <div style="margin-bottom:16px;">
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Téléphone</label>
+                <div style="display:flex;gap:10px;">
+                    <div style="padding:11px 12px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:13px;color:#5a6a7a;background:#f8f9fa;white-space:nowrap;">🇬🇳 +224</div>
+                    <input type="tel" name="telephone" value="{{ old('telephone') }}" placeholder="622 000 000"
+                        style="flex:1;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
                 </div>
             </div>
+
+            {{-- COMMUNE --}}
+            <div style="margin-bottom:16px;">
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Commune <span style="color:#c0392b;">*</span></label>
+                <select name="commune" style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                    <option value="">-- Sélectionnez votre commune --</option>
+                    @foreach(['Kaloum','Dixinn','Matam','Matoto','Ratoma','Lambanyi'] as $commune)
+                        <option value="{{ $commune }}" {{ old('commune') === $commune ? 'selected' : '' }}>{{ $commune }}</option>
+                    @endforeach
+                </select>
+            </div>
+
         </div>
 
-        {{-- CHAMPS ENTREPRISE --}}
+        {{-- FORMULAIRE ENTREPRISE --}}
         <div id="champs-entreprise" style="display:none;">
-            <hr style="border:none;border-top:1px solid #E2E8F0;margin-bottom:16px;">
-            <div style="font-size:13px;font-weight:700;color:#0D2137;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
-                <span style="width:20px;height:20px;background:#1A4B7A;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">i</span>
-                Informations de votre structure
+
+            {{-- RAISON SOCIALE --}}
+            <div style="margin-bottom:16px;">
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Raison sociale <span style="color:#c0392b;">*</span></label>
+                <input type="text" name="raison_sociale" value="{{ old('raison_sociale') }}" placeholder="Ex: TechGuinée SARL"
+                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
             </div>
+
+            {{-- EMAIL ENTREPRISE --}}
+            <div style="margin-bottom:16px;">
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Adresse email <span style="color:#c0392b;">*</span></label>
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="contact@entreprise.com"
+                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+            </div>
+
+            {{-- SECTEUR D'ACTIVITÉ --}}
             <div style="margin-bottom:16px;">
                 <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Secteur d'activité <span style="color:#c0392b;">*</span></label>
                 <select name="secteur_activite"
@@ -158,24 +123,10 @@
                     @endforeach
                 </select>
             </div>
-            <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Taille de la structure <span style="color:#c0392b;">*</span></label>
-                <select name="taille_structure"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-                    <option value="">-- Sélectionnez --</option>
-                    @foreach(['TPE (1–9 employés)','PME (10–49 employés)','Grande entreprise (50+)','ONG / Association','Institution publique'] as $taille)
-                        <option value="{{ $taille }}" {{ old('taille_structure') === $taille ? 'selected' : '' }}>{{ $taille }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Site web (optionnel)</label>
-                <input type="url" name="site_web" value="{{ old('site_web') }}" placeholder="https://www.monentreprise.com"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-            </div>
+
         </div>
 
-        {{-- MOT DE PASSE --}}
+        {{-- MOT DE PASSE — commun à tous --}}
         <div style="margin-bottom:16px;">
             <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Mot de passe <span style="color:#c0392b;">*</span></label>
             <input type="password" name="password" placeholder="Minimum 8 caractères"
@@ -229,52 +180,15 @@ cartes.forEach(carte => {
 });
 
 function adapterChamps(role) {
-    // Reset tous les blocs
-    document.getElementById('champs-offreur').style.display       = 'none';
-    document.getElementById('champs-entreprise').style.display    = 'none';
-    document.getElementById('champ-nom').style.display            = 'block';
-    document.getElementById('champ-prenom').style.display         = 'block';
-    document.getElementById('champ-raison-sociale').style.display = 'none';
-
-    if (['freelance', 'artisan', 'tuteur'].includes(role)) {
-        document.getElementById('champs-offreur').style.display = 'block';
-
-        const labels = {
-            freelance: {
-                competences: 'Compétences (ex: Laravel, Design, Comptabilité...)',
-                tarif:       'Tarif horaire ou par projet (GNF)',
-                unites:      ['/ heure', '/ jour', '/ projet']
-            },
-            artisan: {
-                competences: "Domaine d'activité (ex: Électricité, Plomberie...)",
-                tarif:       'Tarif journalier ou par intervention (GNF)',
-                unites:      ['/ jour', '/ intervention', '/ heure']
-            },
-            tuteur: {
-                competences: 'Matières enseignées (ex: Maths, Physique, Anglais...)',
-                tarif:       'Tarif par séance (GNF)',
-                unites:      ['/ séance', '/ heure', '/ mois']
-            }
-        };
-
-        document.getElementById('label-competences').textContent = labels[role].competences;
-        document.getElementById('label-tarif').textContent       = labels[role].tarif;
-
-        const sel = document.getElementById('select-unite');
-        sel.innerHTML = '';
-        labels[role].unites.forEach(u => {
-            const o = document.createElement('option');
-            o.text = u; o.value = u;
-            sel.add(o);
-        });
-
-    } else if (role === 'entreprise') {
-        document.getElementById('champs-entreprise').style.display    = 'block';
-        document.getElementById('champ-nom').style.display            = 'none';
-        document.getElementById('champ-prenom').style.display         = 'none';
-        document.getElementById('champ-raison-sociale').style.display = 'block';
+    if (role === 'entreprise') {
+        // Afficher formulaire entreprise, cacher freelance/particulier
+        document.getElementById('champs-freelance-particulier').style.display = 'none';
+        document.getElementById('champs-entreprise').style.display            = 'block';
+    } else {
+        // Afficher formulaire freelance/particulier, cacher entreprise
+        document.getElementById('champs-freelance-particulier').style.display = 'block';
+        document.getElementById('champs-entreprise').style.display            = 'none';
     }
-    // particulier — aucun champ supplémentaire
 }
 
 // Restaurer après erreur de validation

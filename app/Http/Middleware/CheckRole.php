@@ -13,13 +13,10 @@ class CheckRole
     {
         $user = Auth::user();
 
-        $offreurs   = ['freelance', 'artisan', 'tuteur'];
-        $demandeurs = ['entreprise', 'particulier'];
-
         $allowed = match($role) {
             'admin'     => $user->role === 'admin',
-            'offreur'   => in_array($user->role, $offreurs),
-            'demandeur' => in_array($user->role, $demandeurs),
+            'offreur'   => $user->role === 'freelance',             // ← artisan et tuteur supprimés
+            'demandeur' => in_array($user->role, ['entreprise', 'particulier']),
             default     => false,
         };
 

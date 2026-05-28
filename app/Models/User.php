@@ -66,7 +66,18 @@ class User extends Authenticatable
 
     // ---- Helpers rôles ----
 
-    public function isAdmin()     { return $this->role === 'admin'; }
-    public function isOffreur()   { return in_array($this->role, ['freelance', 'artisan', 'tuteur']); }
-    public function isDemandeur() { return in_array($this->role, ['entreprise', 'particulier']); }
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isOffreur(): bool
+    {
+        return $this->role === 'freelance'; // ← artisan et tuteur supprimés
+    }
+
+    public function isDemandeur(): bool
+    {
+        return in_array($this->role, ['entreprise', 'particulier']);
+    }
 }
