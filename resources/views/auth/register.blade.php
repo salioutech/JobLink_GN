@@ -11,19 +11,19 @@
 <div style="max-width:580px;margin:28px auto 32px;background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:28px;box-shadow:0 2px 16px rgba(0,0,0,0.06);">
 
     @if($errors->any())
-        <div class="alert-error">
-            <ul style="list-style:none;padding:0;">
+        <div style="background:#fdecea;border-left:4px solid #c0392b;border-radius:8px;padding:12px 16px;margin-bottom:20px;">
+            <ul style="list-style:none;padding:0;margin:0;">
                 @foreach($errors->all() as $error)
-                    <li>⚠ {{ $error }}</li>
+                    <li style="font-size:13px;color:#c0392b;">⚠ {{ $error }}</li>
                 @endforeach
             </ul>
         </div>
     @endif
 
-    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        {{-- CHOIX DU RÔLE — 3 rôles uniquement --}}
+        {{-- CHOIX DU RÔLE --}}
         <div style="margin-bottom:20px;">
             <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:10px;">
                 Vous êtes... <span style="color:#c0392b;">*</span>
@@ -46,32 +46,40 @@
                     </label>
                 @endforeach
             </div>
+            @error('role')
+                <div style="font-size:12px;color:#c0392b;margin-top:6px;">⚠ {{ $message }}</div>
+            @enderror
         </div>
 
         <hr style="border:none;border-top:1px solid #E2E8F0;margin-bottom:20px;">
 
-        {{-- FORMULAIRE FREELANCE ET PARTICULIER (identique) --}}
-        <div id="champs-freelance-particulier">
+        {{-- EMAIL — UN SEUL CHAMP COMMUN --}}
+        <div style="margin-bottom:16px;">
+            <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">
+                Adresse email <span style="color:#c0392b;">*</span>
+            </label>
+            <input type="email" name="email" value="{{ old('email') }}"
+                placeholder="exemple@email.com"
+                style="width:100%;padding:11px 14px;border:1.5px solid {{ $errors->has('email') ? '#c0392b' : '#E2E8F0' }};border-radius:8px;font-size:14px;outline:none;">
+            @error('email')
+                <div style="font-size:12px;color:#c0392b;margin-top:4px;">⚠ {{ $message }}</div>
+            @enderror
+        </div>
 
-            {{-- NOM --}}
-            <div id="champ-nom" style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Nom <span style="color:#c0392b;">*</span></label>
-                <input type="text" name="nom" value="{{ old('nom') }}" placeholder="Ex: Diallo"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-            </div>
+        {{-- CHAMPS FREELANCES / PARTICULIER --}}
+        <div id="champs-individuels" style="display:{{ in_array(old('role'), ['consultant','artisan','tuteur','particulier']) || !old('role') ? 'block' : 'none' }};">
 
-            {{-- PRÉNOM --}}
-            <div id="champ-prenom" style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Prénom</label>
-                <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Ex: Mamadou"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-            </div>
-
-            {{-- EMAIL --}}
-            <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Adresse email <span style="color:#c0392b;">*</span></label>
-                <input type="email" name="email" value="{{ old('email') }}" placeholder="exemple@email.com"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+            <div style="display:flex;gap:12px;margin-bottom:16px;">
+                <div style="flex:1;">
+                    <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Nom <span style="color:#c0392b;">*</span></label>
+                    <input type="text" name="nom" value="{{ old('nom') }}" placeholder="Ex: Diallo"
+                        style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Prénom</label>
+                    <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Ex: Mamadou"
+                        style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                </div>
             </div>
 
             {{-- TÉLÉPHONE --}}
@@ -86,7 +94,7 @@
 
             {{-- COMMUNE --}}
             <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Commune <span style="color:#c0392b;">*</span></label>
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Commune</label>
                 <select name="commune" style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
                     <option value="">-- Sélectionnez votre commune --</option>
                     @foreach(['Kaloum','Dixinn','Matam','Matoto','Ratoma','Lambanyi'] as $commune)
@@ -95,45 +103,85 @@
                 </select>
             </div>
 
+            {{-- CHAMPS OFFREUR (consultant, artisan, tuteur) --}}
+            <div id="champs-offreur" style="display:{{ in_array(old('role'), ['consultant','artisan','tuteur']) ? 'block' : 'none' }};">
+                <div style="margin-bottom:16px;">
+                    <label id="label-competences" style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Compétences</label>
+                    <input type="text" name="competences" value="{{ old('competences') }}"
+                        placeholder="Ex: Laravel, Design, Comptabilité..."
+                        style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                </div>
+                <div style="display:flex;gap:12px;margin-bottom:16px;">
+                    <div style="flex:1;">
+                        <label id="label-tarif" style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Tarif (GNF)</label>
+                        <input type="number" name="tarif" value="{{ old('tarif') }}" placeholder="0"
+                            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                    </div>
+                    <div style="width:140px;">
+                        <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Unité</label>
+                        <select id="select-unite" name="unite_tarif"
+                            style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                            <option>/ heure</option>
+                            <option>/ jour</option>
+                            <option>/ séance</option>
+                            <option>/ projet</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        {{-- FORMULAIRE ENTREPRISE --}}
-        <div id="champs-entreprise" style="display:none;">
+        {{-- CHAMPS ENTREPRISE --}}
+        <div id="champs-entreprise" style="display:{{ old('role') === 'entreprise' ? 'block' : 'none' }};">
 
-            {{-- RAISON SOCIALE --}}
             <div style="margin-bottom:16px;">
                 <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Raison sociale <span style="color:#c0392b;">*</span></label>
                 <input type="text" name="raison_sociale" value="{{ old('raison_sociale') }}" placeholder="Ex: TechGuinée SARL"
                     style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
             </div>
 
-            {{-- EMAIL ENTREPRISE --}}
             <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Adresse email <span style="color:#c0392b;">*</span></label>
-                <input type="email" name="email" value="{{ old('email') }}" placeholder="contact@entreprise.com"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Téléphone</label>
+                <div style="display:flex;gap:10px;">
+                    <div style="padding:11px 12px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:13px;color:#5a6a7a;background:#f8f9fa;white-space:nowrap;">🇬🇳 +224</div>
+                    <input type="tel" name="telephone" value="{{ old('telephone') }}" placeholder="622 000 000"
+                        style="flex:1;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                </div>
             </div>
 
-            {{-- SECTEUR D'ACTIVITÉ --}}
-            <div style="margin-bottom:16px;">
-                <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Secteur d'activité <span style="color:#c0392b;">*</span></label>
-                <select name="secteur_activite"
-                    style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
-                    <option value="">-- Sélectionnez --</option>
-                    @foreach(['Informatique & Technologie','Bâtiment & Construction','Commerce & Distribution','Éducation & Formation','Santé','Transport & Logistique','ONG / Association','Autre'] as $secteur)
-                        <option value="{{ $secteur }}" {{ old('secteur_activite') === $secteur ? 'selected' : '' }}>{{ $secteur }}</option>
-                    @endforeach
-                </select>
+            <div style="display:flex;gap:12px;margin-bottom:16px;">
+                <div style="flex:1;">
+                    <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Secteur d'activité <span style="color:#c0392b;">*</span></label>
+                    <select name="secteur_activite" style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                        <option value="">-- Sélectionnez --</option>
+                        @foreach(['Informatique & Technologie','Bâtiment & Construction','Commerce & Distribution','Éducation & Formation','Santé','Transport & Logistique','ONG / Association','Autre'] as $secteur)
+                            <option value="{{ $secteur }}" {{ old('secteur_activite') === $secteur ? 'selected' : '' }}>{{ $secteur }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Commune</label>
+                    <select name="commune" style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                        <option value="">-- Commune --</option>
+                        @foreach(['Kaloum','Dixinn','Matam','Matoto','Ratoma','Lambanyi'] as $commune)
+                            <option value="{{ $commune }}" {{ old('commune') === $commune ? 'selected' : '' }}>{{ $commune }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
         </div>
 
-        {{-- MOT DE PASSE — commun à tous --}}
+        {{-- MOT DE PASSE --}}
         <div style="margin-bottom:16px;">
             <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">Mot de passe <span style="color:#c0392b;">*</span></label>
             <input type="password" name="password" placeholder="Minimum 8 caractères"
-                style="width:100%;padding:11px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:14px;outline:none;">
+                style="width:100%;padding:11px 14px;border:1.5px solid {{ $errors->has('password') ? '#c0392b' : '#E2E8F0' }};border-radius:8px;font-size:14px;outline:none;">
             <div style="font-size:11px;color:#5a6a7a;margin-top:4px;">⚠ Doit contenir au moins 1 majuscule et 1 chiffre</div>
+            @error('password')
+                <div style="font-size:12px;color:#c0392b;margin-top:4px;">⚠ {{ $message }}</div>
+            @enderror
         </div>
 
         <div style="margin-bottom:20px;">
@@ -152,13 +200,7 @@
             Créer mon compte gratuitement
         </button>
 
-        <div style="display:flex;align-items:center;gap:12px;margin:18px 0;">
-            <div style="flex:1;height:1px;background:#E2E8F0;"></div>
-            <span style="font-size:12px;color:#5a6a7a;">ou</span>
-            <div style="flex:1;height:1px;background:#E2E8F0;"></div>
-        </div>
-
-        <p style="text-align:center;font-size:14px;color:#5a6a7a;">
+        <p style="text-align:center;font-size:14px;color:#5a6a7a;margin-top:18px;">
             Déjà un compte ? <a href="{{ route('login') }}" style="color:#1A9B5A;font-weight:700;">Se connecter →</a>
         </p>
     </form>
@@ -182,49 +224,54 @@ cartes.forEach(carte => {
 });
 
 function adapterChamps(role) {
-    document.getElementById('champs-offreur').style.display       = 'none';
-    document.getElementById('champs-entreprise').style.display    = 'none';
-    document.getElementById('champ-nom').style.display            = 'block';
-    document.getElementById('champ-prenom').style.display         = 'block';
-    document.getElementById('champ-raison-sociale').style.display = 'none';
+    const individuels = document.getElementById('champs-individuels');
+    const offreur     = document.getElementById('champs-offreur');
+    const entreprise  = document.getElementById('champs-entreprise');
+
+    const labelsConfig = {
+        consultant: {
+            competences: 'Compétences (ex: Laravel, Design, Comptabilité...)',
+            tarif: 'Tarif horaire ou par projet (GNF)',
+            unites: ['/ heure', '/ jour', '/ projet']
+        },
+        artisan: {
+            competences: "Domaine d'activité (ex: Électricité, Plomberie...)",
+            tarif: 'Tarif journalier ou par intervention (GNF)',
+            unites: ['/ jour', '/ intervention', '/ heure']
+        },
+        tuteur: {
+            competences: 'Matières enseignées (ex: Maths, Physique, Anglais...)',
+            tarif: 'Tarif par séance (GNF)',
+            unites: ['/ séance', '/ heure', '/ mois']
+        }
+    };
 
     if (['consultant', 'artisan', 'tuteur'].includes(role)) {
-        document.getElementById('champs-offreur').style.display = 'block';
+        individuels.style.display = 'block';
+        offreur.style.display     = 'block';
+        entreprise.style.display  = 'none';
 
-        const labels = {
-            consultant: {
-                competences: 'Compétences (ex: Laravel, Design, Comptabilité...)',
-                tarif:       'Tarif horaire ou par projet (GNF)',
-                unites:      ['/ heure', '/ jour', '/ projet']
-            },
-            artisan: {
-                competences: "Domaine d'activité (ex: Électricité, Plomberie...)",
-                tarif:       'Tarif journalier ou par intervention (GNF)',
-                unites:      ['/ jour', '/ intervention', '/ heure']
-            },
-            tuteur: {
-                competences: 'Matières enseignées (ex: Maths, Physique, Anglais...)',
-                tarif:       'Tarif par séance (GNF)',
-                unites:      ['/ séance', '/ heure', '/ mois']
-            }
-        };
-
-        document.getElementById('label-competences').textContent = labels[role].competences;
-        document.getElementById('label-tarif').textContent       = labels[role].tarif;
-
+        const cfg = labelsConfig[role];
+        document.getElementById('label-competences').textContent = cfg.competences;
+        document.getElementById('label-tarif').textContent       = cfg.tarif;
         const sel = document.getElementById('select-unite');
         sel.innerHTML = '';
-        labels[role].unites.forEach(u => {
+        cfg.unites.forEach(u => {
             const o = document.createElement('option');
             o.text = u; o.value = u;
             sel.add(o);
         });
 
     } else if (role === 'entreprise') {
-        document.getElementById('champs-entreprise').style.display    = 'block';
-        document.getElementById('champ-nom').style.display            = 'none';
-        document.getElementById('champ-prenom').style.display         = 'none';
-        document.getElementById('champ-raison-sociale').style.display = 'block';
+        individuels.style.display = 'none';
+        offreur.style.display     = 'none';
+        entreprise.style.display  = 'block';
+
+    } else {
+        // particulier
+        individuels.style.display = 'block';
+        offreur.style.display     = 'none';
+        entreprise.style.display  = 'none';
     }
 }
 

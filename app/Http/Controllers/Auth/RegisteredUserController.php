@@ -23,6 +23,7 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        
         $request->validate([
             'nom'            => 'required_unless:role,entreprise|nullable|string|max:100',
             'prenom'         => 'nullable|string|max:100',
