@@ -44,9 +44,26 @@
                     <span style="background:#fdecea;color:#c0392b;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;">Indisponible</span>
                 @endif
             </div>
+
             <div style="font-size:14px;color:#B5C8D8;margin-bottom:10px;">
                 {{ $profile->user->services->first()?->titre ?? ucfirst($profile->user->role) }}
             </div>
+
+            {{-- NOTE MOYENNE --}}
+            @php
+                $allNotes = $profile->user->services->flatMap(fn($s) => $s->notes);
+                $moyenneGlobale = $allNotes->avg('valeur');
+                $totalNotes = $allNotes->count();
+            @endphp
+            @if($totalNotes > 0)
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                    @for($i = 1; $i <= 5; $i++)
+                        <span style="color:{{ $moyenneGlobale >= $i ? '#F0A500' : 'rgba(255,255,255,0.3)' }};font-size:16px;">★</span>
+                    @endfor
+                    <span style="font-size:13px;color:#B5C8D8;">{{ number_format($moyenneGlobale, 1) }} ({{ $totalNotes }} avis)</span>
+                </div>
+            @endif
+
             <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
                 <span style="font-size:13px;color:#B5C8D8;">📍 {{ $profile->localisation ?? 'Conakry' }}</span>
                 <span style="font-size:13px;color:#B5C8D8;">📅 Membre depuis {{ $profile->created_at->format('M Y') }}</span>
@@ -72,14 +89,11 @@
                             style="background:#1A9B5A;color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">
                             ✉ Envoyer une demande
                         </button>
-                        {{-- BOUTON WHATSAPP --}}
                         @if($profile->telephone)
                             <a href="https://wa.me/224{{ preg_replace('/[^0-9]/', '', $profile->telephone) }}"
                                 target="_blank"
-                                style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                                </svg>
+                                style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                                 WhatsApp
                             </a>
                         @endif
@@ -117,6 +131,7 @@
     {{-- COLONNE GAUCHE --}}
     <div style="display:flex;flex-direction:column;gap:20px;">
 
+        {{-- À PROPOS --}}
         @if($profile->bio)
             <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
                 <h2 style="font-size:16px;font-weight:700;color:#0D2137;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #1A9B5A;display:inline-block;">À propos</h2>
@@ -124,6 +139,7 @@
             </div>
         @endif
 
+        {{-- COMPÉTENCES --}}
         @if($profile->detail?->competences)
             <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
                 <h2 style="font-size:16px;font-weight:700;color:#0D2137;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1A9B5A;display:inline-block;">Compétences</h2>
@@ -137,33 +153,75 @@
             </div>
         @endif
 
-        @if($profile->user->services->count() > 0)
+        {{-- SERVICES PROPOSÉS --}}
+        @if($profile->user->isOffreur() && $profile->user->services->count() > 0)
             <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
-                <h2 style="font-size:16px;font-weight:700;color:#0D2137;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1A9B5A;display:inline-block;">Services proposés</h2>
+                <h2 style="font-size:16px;font-weight:700;color:#0D2137;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1A9B5A;display:inline-block;">
+                    {{ $profile->user->role === 'tuteur' ? 'Cours proposés' : 'Services proposés' }}
+                </h2>
                 <div style="display:flex;flex-direction:column;gap:12px;">
                     @foreach($profile->user->services->where('statut','actif') as $service)
-                        <div style="background:#F4F6F9;border-radius:10px;padding:16px;border-left:4px solid #1A4B7A;">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                                <div style="font-size:14px;font-weight:700;color:#0D2137;">{{ $service->titre }}</div>
-                                <span style="background:#E6F7EE;color:#0A6B3A;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;">Actif</span>
+                        <a href="{{ route('service.show', $service->id) }}" style="text-decoration:none;">
+                            <div style="background:#F4F6F9;border-radius:10px;padding:16px;border-left:4px solid #1A4B7A;cursor:pointer;"
+                                onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'"
+                                onmouseout="this.style.boxShadow='none'">
+                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                                    <div style="font-size:14px;font-weight:700;color:#0D2137;">{{ $service->titre }}</div>
+                                    <span style="background:#E6F7EE;color:#0A6B3A;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;">Actif</span>
+                                </div>
+                                <p style="font-size:13px;color:#5a6a7a;margin-bottom:10px;line-height:1.6;">
+                                    {{ Str::limit($service->description, 100) }}
+                                </p>
+                                <div style="display:flex;align-items:center;justify-content:space-between;">
+                                    <span style="font-size:14px;font-weight:700;color:#1A9B5A;">
+                                        {{ $service->tarif ? number_format($service->tarif, 0, ',', ' ').' GNF' : 'À négocier' }}
+                                    </span>
+                                    <span style="background:#E8F0F9;color:#1A4B7A;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;">
+                                        {{ $service->categorie->nom ?? '' }}
+                                    </span>
+                                </div>
                             </div>
-                            <p style="font-size:13px;color:#5a6a7a;margin-bottom:10px;line-height:1.6;">
-                                {{ Str::limit($service->description, 100) }}
-                            </p>
-                            <div style="display:flex;align-items:center;justify-content:space-between;">
-                                <span style="font-size:14px;font-weight:700;color:#1A9B5A;">
-                                    {{ $service->tarif ? number_format($service->tarif, 0, ',', ' ').' GNF' : 'À négocier' }}
-                                </span>
-                                <span style="background:#E8F0F9;color:#1A4B7A;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;">
-                                    {{ $service->categorie->nom ?? '' }}
-                                </span>
-                            </div>
-                        </div>
+                        </a>
                     @endforeach
                 </div>
             </div>
         @endif
 
+        {{-- OFFRES PUBLIÉES (pour entreprises et particuliers) --}}
+        @if($profile->user->isDemandeur() && $profile->user->offres->count() > 0)
+            <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
+                <h2 style="font-size:16px;font-weight:700;color:#0D2137;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1A9B5A;display:inline-block;">Offres publiées</h2>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    @foreach($profile->user->offres->where('statut','active') as $offre)
+                        <a href="{{ route('offre.show', $offre->id) }}" style="text-decoration:none;">
+                            <div style="background:#F4F6F9;border-radius:10px;padding:16px;border-left:4px solid #1A9B5A;cursor:pointer;"
+                                onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'"
+                                onmouseout="this.style.boxShadow='none'">
+                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                                    <div style="font-size:14px;font-weight:700;color:#0D2137;">{{ $offre->titre }}</div>
+                                    <span style="background:#E8F0F9;color:#1A4B7A;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;">
+                                        {{ ucfirst(str_replace('_',' ',$offre->type)) }}
+                                    </span>
+                                </div>
+                                <p style="font-size:13px;color:#5a6a7a;margin-bottom:10px;line-height:1.6;">
+                                    {{ Str::limit($offre->description, 100) }}
+                                </p>
+                                <div style="display:flex;align-items:center;justify-content:space-between;">
+                                    <span style="font-size:14px;font-weight:700;color:#1A9B5A;">
+                                        {{ $offre->budget ? number_format($offre->budget, 0, ',', ' ').' GNF' : 'À négocier' }}
+                                    </span>
+                                    @if($offre->duree)
+                                        <span style="font-size:12px;color:#5a6a7a;">⏱ {{ $offre->duree }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        {{-- PORTFOLIO --}}
         @if($profile->detail?->portfolio_url || $profile->detail?->portfolio_fichier)
             <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
                 <h2 style="font-size:16px;font-weight:700;color:#0D2137;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #1A9B5A;display:inline-block;">Portfolio</h2>
@@ -185,9 +243,10 @@
         @endif
 
     </div>
+    {{-- FIN COLONNE GAUCHE --}}
 
     {{-- COLONNE DROITE --}}
-    <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:84px;">
 
         <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;border-top:4px solid #1A9B5A;">
             <h3 style="font-size:15px;font-weight:700;color:#0D2137;margin-bottom:16px;">
@@ -228,10 +287,29 @@
                         </span>
                     @endauth
                 </div>
-                <div style="display:flex;justify-content:space-between;font-size:13px;">
-                    <span style="color:#5a6a7a;">Services publiés</span>
-                    <span style="font-weight:600;color:#0D2137;">{{ $profile->user->services->where('statut','actif')->count() }} actifs</span>
-                </div>
+                @if($profile->user->isOffreur())
+                    <div style="display:flex;justify-content:space-between;font-size:13px;">
+                        <span style="color:#5a6a7a;">Services actifs</span>
+                        <span style="font-weight:600;color:#0D2137;">{{ $profile->user->services->where('statut','actif')->count() }}</span>
+                    </div>
+                @else
+                    <div style="display:flex;justify-content:space-between;font-size:13px;">
+                        <span style="color:#5a6a7a;">Offres actives</span>
+                        <span style="font-weight:600;color:#0D2137;">{{ $profile->user->offres->where('statut','active')->count() }}</span>
+                    </div>
+                @endif
+
+                {{-- NOTE GLOBALE --}}
+                @if($totalNotes > 0)
+                    <div style="display:flex;justify-content:space-between;font-size:13px;align-items:center;">
+                        <span style="color:#5a6a7a;">Note globale</span>
+                        <span style="display:flex;align-items:center;gap:4px;">
+                            <span style="color:#F0A500;font-size:14px;">★</span>
+                            <span style="font-weight:700;color:#0D2137;">{{ number_format($moyenneGlobale, 1) }}</span>
+                            <span style="font-size:11px;color:#5a6a7a;">({{ $totalNotes }})</span>
+                        </span>
+                    </div>
+                @endif
             </div>
 
             @auth
@@ -240,25 +318,20 @@
                         style="background:#1A9B5A;color:#fff;border:none;width:100%;padding:13px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">
                         ✉ Envoyer une demande
                     </button>
-
-                    {{-- BOUTON WHATSAPP --}}
                     @if($profile->telephone)
                         <a href="https://wa.me/224{{ preg_replace('/[^0-9]/', '', $profile->telephone) }}"
                             target="_blank"
                             style="display:flex;align-items:center;justify-content:center;gap:8px;background:#25D366;color:#fff;padding:13px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:10px;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                            </svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                             Contacter sur WhatsApp
                         </a>
                     @endif
-
                 @endif
             @else
-                <a href="{{ route('login') }}"
-                    style="display:block;text-align:center;background:#1A9B5A;color:#fff;padding:13px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:10px;">
-                    🔒 Se connecter pour contacter
-                </a>
+                <button onclick="afficherAlerte()"
+                    style="display:block;width:100%;text-align:center;background:#1A9B5A;color:#fff;border:none;padding:13px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;">
+                    ✉ Envoyer une demande
+                </button>
                 <p style="text-align:center;font-size:12px;color:#5a6a7a;">
                     Pas de compte ? <a href="{{ route('register') }}" style="color:#1A9B5A;font-weight:700;">S'inscrire →</a>
                 </p>
@@ -278,6 +351,35 @@
         @endauth
 
     </div>
+    {{-- FIN COLONNE DROITE --}}
+
+</div>
+
+{{-- MODAL ALERTE CONNEXION --}}
+<div id="modal-alerte-connexion"
+    style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;padding:32px 28px;width:100%;max-width:400px;margin:20px;text-align:center;">
+        <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+        <h3 style="font-size:18px;font-weight:700;color:#0D2137;margin-bottom:10px;">Connexion requise</h3>
+        <p style="font-size:14px;color:#5a6a7a;line-height:1.7;margin-bottom:24px;">
+            Vous devez être connecté pour effectuer cette action.<br>
+            Rejoignez JobLink GN gratuitement !
+        </p>
+        <div style="display:flex;gap:10px;justify-content:center;">
+            <a href="{{ route('login') }}"
+                style="background:#1A9B5A;color:#fff;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;">
+                Se connecter
+            </a>
+            <a href="{{ route('register') }}"
+                style="background:#F0A500;color:#0D2137;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;">
+                S'inscrire
+            </a>
+        </div>
+        <button onclick="document.getElementById('modal-alerte-connexion').style.display='none'"
+            style="margin-top:16px;background:transparent;border:none;color:#5a6a7a;font-size:13px;cursor:pointer;text-decoration:underline;">
+            Fermer
+        </button>
+    </div>
 </div>
 
 {{-- MODAL DEMANDE DE CONTACT --}}
@@ -294,7 +396,6 @@
                 ✓ {{ session('success') }}
             </div>
         @endif
-
         @if($errors->any())
             <div style="background:#fdecea;border-left:4px solid #c0392b;border-radius:8px;padding:12px;margin-bottom:16px;">
                 @foreach($errors->all() as $error)
@@ -333,7 +434,6 @@
     <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:440px;margin:20px;">
         <h3 style="font-size:18px;font-weight:700;color:#c0392b;margin-bottom:6px;">Signaler ce profil</h3>
         <p style="font-size:13px;color:#5a6a7a;margin-bottom:20px;">Décrivez le problème. L'administrateur examinera votre signalement.</p>
-
         <form method="POST" action="{{ route('signalement.store') }}">
             @csrf
             <input type="hidden" name="cible_type" value="user">
@@ -341,7 +441,6 @@
             <div style="margin-bottom:16px;">
                 <label style="font-size:13px;font-weight:600;color:#0D2137;display:block;margin-bottom:6px;">
                     Motif <span style="color:#c0392b;">*</span>
-                    <span style="font-size:11px;color:#5a6a7a;font-weight:400;">(minimum 10 caractères)</span>
                 </label>
                 <textarea name="motif" rows="4" maxlength="500"
                     placeholder="Décrivez pourquoi vous signalez ce profil..."
@@ -350,7 +449,7 @@
             <div style="display:flex;gap:10px;">
                 <button type="submit"
                     style="flex:1;background:#c0392b;color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">
-                    Envoyer le signalement
+                    Envoyer
                 </button>
                 <button type="button" onclick="document.getElementById('modal-signalement').style.display='none'"
                     style="flex:1;background:transparent;color:#5a6a7a;border:1.5px solid #E2E8F0;padding:12px;border-radius:8px;font-size:14px;cursor:pointer;">
@@ -361,5 +460,16 @@
     </div>
 </div>
 @endauth
+
+@push('scripts')
+<script>
+function afficherAlerte() {
+    document.getElementById('modal-alerte-connexion').style.display = 'flex';
+}
+document.getElementById('modal-alerte-connexion').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+});
+</script>
+@endpush
 
 @endsection

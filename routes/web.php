@@ -35,7 +35,7 @@ require __DIR__.'/auth.php';
 
 Route::middleware(['auth', 'check.statut'])->group(function () {
 
-    // Dashboard — redirige selon le rôle
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profil
@@ -56,7 +56,14 @@ Route::middleware(['auth', 'check.statut'])->group(function () {
     Route::post('/favoris', [FavoriController::class, 'toggle'])->name('favori.toggle');
     Route::get('/mes-favoris', [FavoriController::class, 'index'])->name('favori.index');
 
-    // ---- OFFREURS (freelance) ----
+    // ---- DEMANDES DE CONTACT (tous les utilisateurs connectés) ----
+    Route::post('/demandes', [DemandeContactController::class, 'store'])->name('demande.store');
+    Route::get('/mes-demandes-envoyees', [DemandeContactController::class, 'sent'])->name('demande.sent');
+
+    // ---- SIGNALEMENT ----
+    Route::post('/signalements', [App\Http\Controllers\SignalementController::class, 'store'])->name('signalement.store');
+
+    // ---- OFFREURS (consultant, artisan, tuteur) ----
     Route::middleware('role:offreur')->group(function () {
 
         // Services
@@ -66,12 +73,12 @@ Route::middleware(['auth', 'check.statut'])->group(function () {
         Route::put('/services/{id}', [ServiceController::class, 'update'])->name('service.update');
         Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('service.destroy');
 
-        // Mes candidatures envoyées
+        // Candidatures envoyées
         Route::get('/mes-candidatures', [CandidatureController::class, 'index'])->name('candidature.index');
         Route::post('/candidatures', [CandidatureController::class, 'store'])->name('candidature.store');
         Route::delete('/candidatures/{id}', [CandidatureController::class, 'destroy'])->name('candidature.destroy');
 
-        // Demandes de contact reçues
+        // Demandes reçues
         Route::get('/mes-demandes', [DemandeContactController::class, 'index'])->name('demande.index');
         Route::put('/demandes/{id}', [DemandeContactController::class, 'update'])->name('demande.update');
 
@@ -91,14 +98,7 @@ Route::middleware(['auth', 'check.statut'])->group(function () {
         Route::get('/candidatures-recues', [CandidatureController::class, 'received'])->name('candidature.received');
         Route::put('/candidatures/{id}', [CandidatureController::class, 'update'])->name('candidature.update');
 
-        // Demandes de contact envoyées
-        Route::post('/demandes', [DemandeContactController::class, 'store'])->name('demande.store');
-        Route::get('/mes-demandes-envoyees', [DemandeContactController::class, 'sent'])->name('demande.sent');
-
     });
-
-    // Signalement (tous les utilisateurs connectés)
-    Route::post('/signalements', [App\Http\Controllers\SignalementController::class, 'store'])->name('signalement.store');
 
 });
 
@@ -134,7 +134,6 @@ Route::middleware(['auth', 'check.statut', 'role:admin'])
 
 // =======================================
 // ROUTES PUBLIQUES AVEC PARAMÈTRES
-// (définies en dernier pour éviter les conflits)
 // =======================================
 
 Route::get('/services/{id}', [ServiceController::class, 'show'])->name('service.show');

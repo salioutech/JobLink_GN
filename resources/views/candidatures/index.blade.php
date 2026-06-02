@@ -96,7 +96,7 @@
                             <div style="flex:1;">
                                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
                                     <h3 style="font-size:15px;font-weight:700;color:#0D2137;">
-                                        {{ $candidature->offre->titre ?? 'Offre supprimée' }}
+                                        {{ $candidature->offre?->titre ?? 'Offre supprimée' }}
                                     </h3>
                                     <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
                                         background:{{ $candidature->statut === 'acceptee' ? '#E6F7EE' : ($candidature->statut === 'refusee' ? '#fdecea' : '#FEF3DC') }};
@@ -107,13 +107,13 @@
 
                                 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;flex-wrap:wrap;">
                                     <span style="font-size:13px;color:#5a6a7a;">
-                                        🏢 {{ $candidature->offre->user->profile->nom ?? 'Recruteur' }}
+                                        🏢 {{ $candidature->offre?->user?->profile?->nom ?? 'Recruteur' }}
                                     </span>
                                     <span style="font-size:13px;color:#5a6a7a;">
-                                        💼 {{ ucfirst(str_replace('_',' ',$candidature->offre->type ?? '')) }}
+                                        💼 {{ ucfirst(str_replace('_',' ',$candidature->offre?->type ?? '')) }}
                                     </span>
                                     <span style="font-size:13px;font-weight:700;color:#1A9B5A;">
-                                        {{ $candidature->offre->budget ? number_format($candidature->offre->budget, 0, ',', ' ').' GNF' : 'À négocier' }}
+                                        {{ $candidature->offre?->budget ? number_format($candidature->offre->budget, 0, ',', ' ').' GNF' : 'À négocier' }}
                                     </span>
                                 </div>
 

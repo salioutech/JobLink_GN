@@ -5,6 +5,7 @@ use App\Http\Requests\StoreDemandeContactRequest;
 use App\Models\DemandeContact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class DemandeContactController extends Controller
 {

@@ -20,7 +20,9 @@
         <a href="{{ route('dashboard') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:700;background:#E8F0F9;color:#0D2137;text-decoration:none;">🏠 Tableau de bord</a>
         <a href="{{ route('profil.edit') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">👤 Mon profil</a>
         <a href="{{ route('service.create') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🔧 Mes services</a>
+        <a href="{{ route('candidature.index') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">📩 Mes candidatures</a>
         <a href="{{ route('demande.index') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🤝 Demandes reçues</a>
+        <a href="{{ route('favori.index') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🔖 Mes favoris</a>
         <a href="{{ route('search', ['tab' => 'offres']) }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:8px;font-size:14px;color:#5a6a7a;text-decoration:none;">🔍 Rechercher des offres</a>
         <div style="margin-top:auto;padding-top:16px;border-top:1px solid #E2E8F0;">
             <form method="POST" action="{{ route('logout') }}">
@@ -53,23 +55,33 @@
         @endif
 
         {{-- STATS --}}
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">
             <div style="background:#fff;border-radius:10px;border:1px solid #E2E8F0;padding:16px;text-align:center;border-top:3px solid #1A9B5A;">
                 <div style="font-size:28px;font-weight:700;color:#0D2137;">{{ $services->count() }}</div>
                 <div style="font-size:12px;color:#5a6a7a;margin-top:4px;">Services publiés</div>
                 <div style="font-size:11px;color:#1A9B5A;margin-top:2px;">{{ $services->where('statut','actif')->count() }} actifs</div>
+            </div>
+            <div style="background:#fff;border-radius:10px;border:1px solid #E2E8F0;padding:16px;text-align:center;border-top:3px solid #1A4B7A;">
+                <div style="font-size:28px;font-weight:700;color:#1A4B7A;">{{ $candidatures->count() }}</div>
+                <div style="font-size:12px;color:#5a6a7a;margin-top:4px;">Candidatures</div>
+                <div style="font-size:11px;color:#1A4B7A;margin-top:2px;">{{ $candidatures->where('statut','en_attente')->count() }} en attente</div>
             </div>
             <div style="background:#fff;border-radius:10px;border:1px solid #E2E8F0;padding:16px;text-align:center;border-top:3px solid #F0A500;">
                 <div style="font-size:28px;font-weight:700;color:#F0A500;">{{ $demandes->count() }}</div>
                 <div style="font-size:12px;color:#5a6a7a;margin-top:4px;">Demandes reçues</div>
                 <div style="font-size:11px;color:#F0A500;margin-top:2px;">{{ $demandes->where('statut','en_attente')->count() }} en attente</div>
             </div>
+            <div style="background:#fff;border-radius:10px;border:1px solid #E2E8F0;padding:16px;text-align:center;border-top:3px solid #F0A500;">
+                <div style="font-size:28px;font-weight:700;color:#F0A500;">{{ $favoris->count() }}</div>
+                <div style="font-size:12px;color:#5a6a7a;margin-top:4px;">Favoris</div>
+                <div style="font-size:11px;color:#5a6a7a;margin-top:2px;">sauvegardés</div>
+            </div>
         </div>
 
         {{-- MES SERVICES --}}
         <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;margin-bottom:20px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-                <h2 style="font-size:15px;font-weight:700;color:#0D2137;">Mes services</h2>
+                <h2 style="font-size:15px;font-weight:700;color:#0D2137;">🔧 Mes services</h2>
                 <a href="{{ route('service.create') }}" style="font-size:12px;color:#1A9B5A;font-weight:600;text-decoration:none;">+ Nouveau</a>
             </div>
             @if($services->count() > 0)
@@ -91,7 +103,7 @@
                                     style="font-size:11px;padding:5px 12px;border-radius:6px;border:1px solid #E2E8F0;background:#fff;color:#1A4B7A;text-decoration:none;font-weight:600;">
                                     ✏️ Modifier
                                 </a>
-                                <form method="POST" action="{{ route('service.destroy', $service->id) }}" style="display:inline;" onsubmit="return confirm('Supprimer ?')">
+                                <form method="POST" action="{{ route('service.destroy', $service->id) }}" style="display:inline;" onsubmit="return confirm('Supprimer ce service ?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" style="font-size:11px;padding:5px 12px;border-radius:6px;border:1px solid #fcc;background:#fff;color:#c0392b;cursor:pointer;">🗑</button>
                                 </form>
@@ -108,10 +120,49 @@
             @endif
         </div>
 
-        {{-- DEMANDES REÇUES --}}
-        <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
+        {{-- MES CANDIDATURES --}}
+        <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;margin-bottom:20px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-                <h2 style="font-size:15px;font-weight:700;color:#0D2137;">Demandes de contact reçues</h2>
+                <h2 style="font-size:15px;font-weight:700;color:#0D2137;">📩 Mes dernières candidatures</h2>
+                <a href="{{ route('candidature.index') }}" style="font-size:12px;color:#1A9B5A;font-weight:600;text-decoration:none;">Voir tout →</a>
+            </div>
+            @if($candidatures->count() > 0)
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    @foreach($candidatures->take(3) as $candidature)
+                        <div style="background:#F4F6F9;border-radius:8px;padding:14px;border-left:3px solid
+                            {{ $candidature->statut === 'acceptee' ? '#1A9B5A' : ($candidature->statut === 'refusee' ? '#c0392b' : '#F0A500') }};">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                                <div style="font-size:13px;font-weight:700;color:#0D2137;">
+                                    {{ $candidature->offre?->titre ?? 'Offre supprimée' }}
+                                </div>
+                                <span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+                                    background:{{ $candidature->statut === 'acceptee' ? '#E6F7EE' : ($candidature->statut === 'refusee' ? '#fdecea' : '#FEF3DC') }};
+                                    color:{{ $candidature->statut === 'acceptee' ? '#0A6B3A' : ($candidature->statut === 'refusee' ? '#c0392b' : '#7A4500') }};">
+                                    {{ $candidature->statut === 'acceptee' ? '✓ Acceptée' : ($candidature->statut === 'refusee' ? '✗ Refusée' : '⏳ En attente') }}
+                                </span>
+                            </div>
+                            <div style="font-size:12px;color:#5a6a7a;">
+                                🏢 {{ $candidature->offre?->user?->profile?->nom ?? 'Recruteur' }} ·
+                                📅 {{ $candidature->created_at->diffForHumans() }}
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div style="text-align:center;padding:24px;color:#5a6a7a;">
+                    <div style="font-size:13px;">Vous n'avez pas encore postulé à des offres.</div>
+                    <a href="{{ route('search', ['tab' => 'offres']) }}"
+                        style="display:inline-block;margin-top:10px;background:#1A4B7A;color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;">
+                        Voir les offres disponibles
+                    </a>
+                </div>
+            @endif
+        </div>
+
+        {{-- DEMANDES REÇUES --}}
+        <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <h2 style="font-size:15px;font-weight:700;color:#0D2137;">🤝 Demandes de contact reçues</h2>
                 <a href="{{ route('demande.index') }}" style="font-size:12px;color:#1A9B5A;font-weight:600;text-decoration:none;">Voir tout →</a>
             </div>
             @if($demandes->count() > 0)
@@ -152,6 +203,55 @@
             @else
                 <div style="text-align:center;padding:24px;color:#5a6a7a;">
                     <div style="font-size:13px;">Aucune demande de contact reçue pour le moment.</div>
+                </div>
+            @endif
+        </div>
+
+        {{-- MES FAVORIS --}}
+        <div style="background:#fff;border-radius:12px;border:1px solid #E2E8F0;padding:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <h2 style="font-size:15px;font-weight:700;color:#0D2137;">🔖 Mes favoris</h2>
+                <a href="{{ route('favori.index') }}" style="font-size:12px;color:#1A9B5A;font-weight:600;text-decoration:none;">Voir tout →</a>
+            </div>
+            @if($favoris->count() > 0)
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+                    @foreach($favoris->take(4) as $favori)
+                        @php $item = $favori->favorable; @endphp
+                        @if($item)
+                            <div style="background:#F4F6F9;border-radius:8px;padding:14px;border-left:3px solid #F0A500;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+                                <div style="flex:1;">
+                                    <div style="font-size:11px;color:#5a6a7a;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">
+                                        {{ class_basename($favori->favorable_type) === 'Service' ? '🛠️ Service' : '💼 Offre' }}
+                                    </div>
+                                    <div style="font-size:13px;font-weight:700;color:#0D2137;margin-bottom:4px;">{{ $item->titre }}</div>
+                                    <div style="font-size:12px;color:#1A9B5A;font-weight:600;">
+                                        {{ isset($item->tarif) ? number_format($item->tarif, 0, ',', ' ').' GNF' : (isset($item->budget) && $item->budget ? number_format($item->budget, 0, ',', ' ').' GNF' : 'À négocier') }}
+                                    </div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+                                    <a href="{{ class_basename($favori->favorable_type) === 'Service' ? route('service.show', $item->id) : route('offre.show', $item->id) }}"
+                                        style="font-size:11px;padding:4px 10px;border-radius:6px;background:#E8F0F9;color:#1A4B7A;text-decoration:none;font-weight:600;text-align:center;">
+                                        Voir
+                                    </a>
+                                    <form method="POST" action="{{ route('favori.toggle') }}">
+                                        @csrf
+                                        <input type="hidden" name="type" value="{{ strtolower(class_basename($favori->favorable_type)) }}">
+                                        <input type="hidden" name="id" value="{{ $item->id }}">
+                                        <button type="submit" style="font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid #fcc;background:#fff;color:#c0392b;cursor:pointer;width:100%;">🗑</button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            @else
+                <div style="text-align:center;padding:32px;color:#5a6a7a;">
+                    <div style="font-size:32px;margin-bottom:10px;">🔖</div>
+                    <div style="font-size:14px;font-weight:600;margin-bottom:6px;">Aucun favori sauvegardé</div>
+                    <a href="{{ route('search') }}"
+                        style="background:#F0A500;color:#0D2137;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+                        Explorer les publications
+                    </a>
                 </div>
             @endif
         </div>
