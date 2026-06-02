@@ -15,7 +15,7 @@
     </h1>
 
     <p style="color:#B5C8D8;font-size:15px;margin-bottom:28px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7;">
-        Freelances, artisans, tuteurs — tous les talents guinéens réunis. En français, gratuit, adapté à vos réalités.
+        Consultants, artisans, tuteurs — tous les talents guinéens réunis. En français, gratuit, adapté à vos réalités.
     </p>
 
     {{-- BARRE DE RECHERCHE --}}
@@ -40,7 +40,7 @@
     {{-- STATS --}}
     <div style="display:flex;align-items:center;justify-content:center;gap:36px;margin-top:32px;">
         <div style="text-align:center;">
-            <div style="font-size:26px;font-weight:700;color:#F0A500;">{{ $services->count() + 100 }}+</div>
+            <div style="font-size:26px;font-weight:700;color:#F0A500;">{{ $services->count()  }}+</div>
             <div style="font-size:12px;color:#B5C8D8;">Prestataires actifs</div>
         </div>
         <div style="width:1px;height:36px;background:rgba(255,255,255,0.15);"></div>
@@ -50,7 +50,7 @@
         </div>
         <div style="width:1px;height:36px;background:rgba(255,255,255,0.15);"></div>
         <div style="text-align:center;">
-            <div style="font-size:26px;font-weight:700;color:#F0A500;">{{ $offres->count() + 40 }}+</div>
+            <div style="font-size:26px;font-weight:700;color:#F0A500;">{{ $offres->count()  }}+</div>
             <div style="font-size:12px;color:#B5C8D8;">Offres actives</div>
         </div>
         <div style="width:1px;height:36px;background:rgba(255,255,255,0.15);"></div>

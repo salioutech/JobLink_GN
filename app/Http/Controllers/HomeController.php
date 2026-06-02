@@ -22,7 +22,7 @@ class HomeController extends Controller
                         ->take(3)
                         ->get();
 
-        $categories = Categorie::all();
+        $categories = Categorie::generales()->get();
 
         return view('home', compact('services', 'offres', 'categories'));
     }

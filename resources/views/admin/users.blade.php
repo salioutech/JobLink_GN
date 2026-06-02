@@ -61,7 +61,7 @@
                 <select name="role"
                     style="padding:9px 14px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:13px;outline:none;background:#fff;">
                     <option value="">Tous les rôles</option>
-                    @foreach(['freelance','artisan','tuteur','entreprise','particulier'] as $r)
+                    @foreach(['consultant','artisan','tuteur','entreprise','particulier'] as $r)
                         <option value="{{ $r }}" {{ request('role') === $r ? 'selected' : '' }}>{{ ucfirst($r) }}</option>
                     @endforeach
                 </select>

@@ -44,7 +44,7 @@
             <h2 style="font-size:15px;font-weight:700;color:#0D2137;margin-bottom:16px;">👥 Utilisateurs par rôle</h2>
             @php
                 $roles = [
-                    'freelance'   => ['💻', '#1A4B7A'],
+                    'consultant'   => ['💻', '#1A4B7A'],
                     'artisan'     => ['🔧', '#1A9B5A'],
                     'tuteur'      => ['🎓', '#F0A500'],
                     'entreprise'  => ['🏢', '#0D2137'],

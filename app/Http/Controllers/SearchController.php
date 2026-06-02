@@ -11,8 +11,9 @@ class SearchController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Categorie::all();
+        $categories = Categorie::generales()->get();
         $tab        = $request->get('tab', 'services');
+        $categories = \App\Models\Categorie::generales()->get();
 
         // --- Recherche Services ---
         $queryServices = Service::with(['user.profile', 'categorie'])

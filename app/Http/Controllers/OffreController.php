@@ -18,7 +18,8 @@ class OffreController extends Controller
 
     public function create()
     {
-        $categories = Categorie::all();
+        $categories = Categorie::generales()->get();
+
         return view('offres.create', compact('categories'));
     }
 
@@ -54,8 +55,10 @@ class OffreController extends Controller
     public function edit($id)
     {
         $offre = Offre::findOrFail($id);
-        $this->authorize('update', $offre); // ← Policy
-        $categories = Categorie::all();
+        $this->authorize('update', $offre);
+
+        $categories = Categorie::generales()->get();
+
         return view('offres.edit', compact('offre', 'categories'));
     }
 

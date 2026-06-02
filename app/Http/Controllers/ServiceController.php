@@ -17,19 +17,27 @@ class ServiceController extends Controller
 
     public function create()
     {
-        $categories = Categorie::all();
+        $categories = auth()->user()->role === 'tuteur'
+        ? Categorie::pourTuteur()->get()
+        : Categorie::generales()->get();
+
         return view('services.create', compact('categories'));
     }
 
     public function store(StoreServiceRequest $request)
     {
-        // Si tuteur → créer ou trouver la catégorie par nom
         if (Auth::user()->role === 'tuteur') {
-            $categorie = Categorie::firstOrCreate(['nom' => $request->categorie_id]);
-            $categorie_id = $categorie->id;
+        $categorie = Categorie::firstOrCreate([
+            'nom' => $request->categorie_id
+        ]);
+        $categorie_id = $categorie->id;
         } else {
             $categorie_id = $request->categorie_id;
         }
+
+        $statut = in_array($request->statut, ['actif', 'suspendu', 'supprime'])
+            ? $request->statut
+            : 'actif';
 
         Service::create([
             'user_id'      => Auth::id(),
@@ -38,19 +46,22 @@ class ServiceController extends Controller
             'categorie_id' => $categorie_id,
             'tarif'        => $request->tarif,
             'devise'       => 'GNF',
-            'statut'       => $request->statut,
+            'statut'       => $statut,
         ]);
 
         return redirect()->route('dashboard')
-               ->with('success', Auth::user()->role === 'tuteur' ? 'Cours publié avec succès !' : 'Service publié avec succès !');
+            ->with('success', Auth::user()->role === 'tuteur'
+                ? 'Cours publié avec succès !'
+                : 'Service publié avec succès !');
     }
 
     public function edit($id)
     {
         $service = Service::findOrFail($id);
         $this->authorize('update', $service);
-        $categories = Categorie::all();
-        return view('services.edit', compact('service', 'categories'));
+         $categories = Categorie::generales()->get();
+
+        return view('services.create', compact('categories'));
     }
 
     public function update(StoreServiceRequest $request, $id)
@@ -58,16 +69,28 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
         $this->authorize('update', $service);
 
-        // Si tuteur → créer ou trouver la catégorie par nom
         if (Auth::user()->role === 'tuteur') {
-            $categorie = Categorie::firstOrCreate(['nom' => $request->categorie_id]);
-            $service->update(array_merge($request->validated(), ['categorie_id' => $categorie->id]));
+            $categorie = Categorie::firstOrCreate([
+                'nom' => $request->categorie_id
+            ]);
+
+            $data = $request->validated();
+            $data['categorie_id'] = $categorie->id;
         } else {
-            $service->update($request->validated());
+            $data = $request->validated();
         }
 
+        $data['statut'] = in_array($request->statut, ['actif', 'suspendu', 'supprime'])
+            ? $request->statut
+            : $service->statut;
+
+        $service->update($data);
+
         return redirect()->route('dashboard')
-            ->with('success', Auth::user()->role === 'tuteur' ? 'Cours modifié avec succès !' : 'Service modifié avec succès !');
+            ->with('success', Auth::user()->role === 'tuteur'
+                ? 'Cours modifié avec succès !'
+                : 'Service modifié avec succès !'
+            );
     }
 
     public function destroy($id)
