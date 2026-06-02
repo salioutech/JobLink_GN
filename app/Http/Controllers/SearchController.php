@@ -16,7 +16,8 @@ class SearchController extends Controller
 
         // --- Recherche Services ---
         $queryServices = Service::with(['user.profile', 'categorie'])
-            ->where('statut', 'actif');
+            ->where('statut', 'actif')
+            ->whereHas('user');
 
         if ($request->filled('q'))
             $queryServices->where('titre', 'LIKE', '%'.$request->q.'%');
@@ -38,7 +39,8 @@ class SearchController extends Controller
 
         // --- Recherche Offres ---
         $queryOffres = Offre::with(['user.profile', 'categorie'])
-            ->where('statut', 'active');
+            ->where('statut', 'active')
+            ->whereHas('user');
 
         if ($request->filled('q'))
             $queryOffres->where('titre', 'LIKE', '%'.$request->q.'%');

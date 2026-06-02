@@ -31,7 +31,7 @@
             </label>
             <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
                 @foreach([
-                    'freelance'  => ['💻', 'Freelance', 'Dev, design...'],
+                    'freelance'  => ['💻', 'Consultant', 'Dev, design...'],
                     'artisan'    => ['🔧', 'Artisan', 'Élec, plomb...'],
                     'tuteur'     => ['🎓', 'Tuteur', 'Cours, soutien'],
                     'entreprise' => ['🏢', 'Entreprise', 'PME, ONG...'],

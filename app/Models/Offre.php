@@ -29,4 +29,24 @@ class Offre extends Model
     {
         return $this->hasMany(Candidature::class);
     }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function commentaires()
+    {
+        return $this->morphMany(Commentaire::class, 'commentable');
+    }
+
+    public function notes()
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
+    public function favoris()
+    {
+        return $this->morphMany(Favori::class, 'favorable');
+    }
 }

@@ -31,34 +31,34 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // ========== FREELANCE ==========
-        $freelance = User::firstOrCreate(
-            ['email' => 'freelance@test.com'],
+        // ========== CONSULTANT ==========
+        $consultant = User::firstOrCreate(
+            ['email' => 'consultant@test.com'],
             [
                 'password' => Hash::make('Test@1234'),
-                'role'     => 'freelance',
+                'role'     => 'consultant',
                 'statut'   => 'actif',
             ]
         );
-        $profileFreelance = Profile::firstOrCreate(
-            ['user_id' => $freelance->id],
+        $profileConsultant = Profile::firstOrCreate(
+            ['user_id' => $consultant->id],
             [
                 'nom'             => 'Diallo',
                 'prenom'          => 'Mamadou',
                 'localisation'    => 'Ratoma',
                 'telephone'       => '622000001',
-                'bio'             => 'Développeur web spécialisé Laravel et Vue.js',
+                'bio'             => 'Consultant web spécialisé Laravel et Vue.js',
                 'completion_rate' => 70,
             ]
         );
         ProfilDetail::firstOrCreate(
-            ['profile_id' => $profileFreelance->id],
+            ['profile_id' => $profileConsultant->id],
             [
-                'competences'  => 'Laravel, PHP, MySQL, Vue.js, Bootstrap',
-                'tarif'        => 500000,
-                'devise'       => 'GNF',
-                'disponibilite'=> true,
-                'portfolio_url'=> null,
+                'competences'   => 'Laravel, PHP, MySQL, Vue.js, Bootstrap',
+                'tarif'         => 500000,
+                'devise'        => 'GNF',
+                'disponibilite' => true,
+                'portfolio_url' => null,
             ]
         );
 
@@ -85,11 +85,11 @@ class UserSeeder extends Seeder
         ProfilDetail::firstOrCreate(
             ['profile_id' => $profileArtisan->id],
             [
-                'competences'  => 'Électricité, Installation, Dépannage, Câblage',
-                'tarif'        => 300000,
-                'devise'       => 'GNF',
-                'disponibilite'=> true,
-                'portfolio_url'=> null,
+                'competences'   => 'Électricité, Installation, Dépannage, Câblage',
+                'tarif'         => 300000,
+                'devise'        => 'GNF',
+                'disponibilite' => true,
+                'portfolio_url' => null,
             ]
         );
 
@@ -116,11 +116,11 @@ class UserSeeder extends Seeder
         ProfilDetail::firstOrCreate(
             ['profile_id' => $profileTuteur->id],
             [
-                'competences'  => 'Mathématiques, Physique, Chimie, Soutien scolaire',
-                'tarif'        => 150000,
-                'devise'       => 'GNF',
-                'disponibilite'=> true,
-                'portfolio_url'=> null,
+                'competences'   => 'Mathématiques, Physique, Chimie, Soutien scolaire',
+                'tarif'         => 150000,
+                'devise'        => 'GNF',
+                'disponibilite' => true,
+                'portfolio_url' => null,
             ]
         );
 
@@ -136,14 +136,14 @@ class UserSeeder extends Seeder
         Profile::firstOrCreate(
             ['user_id' => $entreprise->id],
             [
-                'nom'             => 'TechGuinée SARL',
-                'prenom'          => null,
-                'localisation'    => 'Kaloum',
-                'telephone'       => '622000002',
-                'bio'             => 'Entreprise spécialisée en solutions numériques pour la Guinée',
-                'secteur_activite'=> 'Informatique',
-                'taille_structure'=> 'PME',
-                'completion_rate' => 80,
+                'nom'              => 'TechGuinée SARL',
+                'prenom'           => null,
+                'localisation'     => 'Kaloum',
+                'telephone'        => '622000002',
+                'bio'              => 'Entreprise spécialisée en solutions numériques pour la Guinée',
+                'secteur_activite' => 'Informatique',
+                'taille_structure' => 'PME',
+                'completion_rate'  => 80,
             ]
         );
 
@@ -163,7 +163,7 @@ class UserSeeder extends Seeder
                 'prenom'          => 'Aminata',
                 'localisation'    => 'Lambanyi',
                 'telephone'       => '622000005',
-                'bio'             => 'Particulier à la recherche de prestataires fiables à Conakry',
+                'bio'             => 'Particulière à la recherche de prestataires fiables à Conakry',
                 'completion_rate' => 60,
             ]
         );

@@ -116,9 +116,9 @@
                     </div>
                 </div>
 
-                <div style="background:#E8F0F9;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#1A4B7A;line-height:1.6;">
+                {{-- <div style="background:#E8F0F9;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px;color:#1A4B7A;line-height:1.6;">
                     💡 <strong>Conseil :</strong> Indiquez un tarif indicatif. Vous pourrez toujours négocier avec le client une fois en contact.
-                </div>
+                </div> --}}
 
                 <hr style="border:none;border-top:1px solid #E2E8F0;margin:20px 0;">
 
