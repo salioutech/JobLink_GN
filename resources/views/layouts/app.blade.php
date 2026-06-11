@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JobLinkGN — @yield('title', 'Plateforme de mise en relation')</title>
+    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root {
@@ -294,12 +295,174 @@
 </main>
 
 <!-- ── FOOTER ───────────────────────────────────────── -->
-<footer class="footer">
-    <span>© 2025–2026 JobLinkGN — UGANC</span>
-    <div class="footer-links">
-        <a href="#">Conditions d'utilisation</a>
-        <a href="#">Contact</a>
+<footer style="background:#0D2137;padding:48px 28px 0;margin-top:auto;">
+
+    {{-- CONTENU PRINCIPAL --}}
+    <div style="max-width:1100px;margin:0 auto;">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,0.08);">
+
+            {{-- COLONNE 1 — LOGO & DESCRIPTION --}}
+            <div>
+                <div style="margin-bottom:16px;">
+                    <img src="{{ asset('images/logo.png') }}" alt="JobLinkGN"
+                         style="height:52px;object-fit:contain;"
+                         onerror="this.outerHTML='<span style=\'font-size:22px;font-weight:700;color:#fff\'>JobLink<span style=\'color:#F0A500\'>GN</span></span>'">
+                </div>
+                <p style="font-size:13px;color:#8AA4B8;line-height:1.8;margin-bottom:20px;max-width:280px;">
+                    La première plateforme guinéenne de mise en relation professionnelle. Connecter les talents, créer des opportunités.
+                </p>
+                {{-- BADGE --}}
+                <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(26,155,90,0.15);border:1px solid rgba(26,155,90,0.3);border-radius:20px;padding:6px 14px;">
+                    <span style="font-size:14px;">🇬🇳</span>
+                    <span style="font-size:12px;color:#1A9B5A;font-weight:600;">Made in Guinea</span>
+                </div>
+            </div>
+
+            {{-- COLONNE 2 — NAVIGATION --}}
+            <div>
+                <h4 style="font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">
+                    Navigation
+                </h4>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+                    @foreach([
+                        ['Accueil',               route('home')],
+                        ['Rechercher',             route('search')],
+                        ['Services disponibles',   route('search', ['tab' => 'services'])],
+                        ['Offres d\'emploi',       route('search', ['tab' => 'offres'])],
+                    ] as [$label, $url])
+                        <li>
+                            <a href="{{ $url }}"
+                               style="font-size:13px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s;"
+                               onmouseover="this.style.color='#F0A500'"
+                               onmouseout="this.style.color='#8AA4B8'">
+                                <span style="color:#1A9B5A;font-size:10px;">▶</span> {{ $label }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            {{-- COLONNE 3 — MON COMPTE --}}
+            <div>
+                <h4 style="font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">
+                    Mon compte
+                </h4>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+                    @auth
+                        @foreach([
+                            ['Tableau de bord', route('dashboard')],
+                            ['Mon profil',      route('profil.edit')],
+                            ['Mes favoris',     route('favori.index')],
+                            ['Mes services',    route('service.create')],
+                        ] as [$label, $url])
+                            <li>
+                                <a href="{{ $url }}"
+                                   style="font-size:13px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:6px;"
+                                   onmouseover="this.style.color='#F0A500'"
+                                   onmouseout="this.style.color='#8AA4B8'">
+                                    <span style="color:#1A9B5A;font-size:10px;">▶</span> {{ $label }}
+                                </a>
+                            </li>
+                        @endforeach
+                    @else
+                        @foreach([
+                            ['Se connecter', route('login')],
+                            ['S\'inscrire',  route('register')],
+                        ] as [$label, $url])
+                            <li>
+                                <a href="{{ $url }}"
+                                   style="font-size:13px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:6px;"
+                                   onmouseover="this.style.color='#F0A500'"
+                                   onmouseout="this.style.color='#8AA4B8'">
+                                    <span style="color:#1A9B5A;font-size:10px;">▶</span> {{ $label }}
+                                </a>
+                            </li>
+                        @endforeach
+                    @endauth
+                </ul>
+            </div>
+
+            {{-- COLONNE 4 — CONTACT --}}
+            <div>
+                <h4 style="font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">
+                    Contact
+                </h4>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px;">
+                    <li style="display:flex;align-items:flex-start;gap:10px;">
+                        <span style="font-size:16px;margin-top:1px;">📍</span>
+                        <span style="font-size:13px;color:#8AA4B8;line-height:1.6;">Conakry, Guinée<br>Université UGANC</span>
+                    </li>
+                    <li style="display:flex;align-items:center;gap:10px;">
+                        <span style="font-size:16px;">📧</span>
+                        <a href="mailto:contact@joblinkgn.com"
+                           style="font-size:13px;color:#8AA4B8;text-decoration:none;"
+                           onmouseover="this.style.color='#F0A500'"
+                           onmouseout="this.style.color='#8AA4B8'">
+                            contact@joblinkgn.com
+                        </a>
+                    </li>
+                    <li style="display:flex;align-items:center;gap:10px;">
+                        <span style="font-size:16px;">📱</span>
+                        <span style="font-size:13px;color:#8AA4B8;">+224 620 000 000</span>
+                    </li>
+                </ul>
+
+                {{-- RÉSEAUX SOCIAUX --}}
+                <div style="display:flex;gap:10px;margin-top:20px;">
+                    @foreach([
+                        ['f', '#1877F2', 'Facebook'],
+                        ['in', '#0A66C2', 'LinkedIn'],
+                        ['tw', '#1DA1F2', 'Twitter'],
+                    ] as [$letter, $color, $name])
+                        <a href="#" title="{{ $name }}"
+                           style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#8AA4B8;text-decoration:none;border:1px solid rgba(255,255,255,0.08);"
+                           onmouseover="this.style.background='{{ $color }}';this.style.color='#fff'"
+                           onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#8AA4B8'">
+                            {{ $letter }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
+        </div>
+
+        {{-- STATS RAPIDES --}}
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;margin-bottom:28px;margin-top:32px;">
+            @foreach([
+                ['💼', $totalServices ?? '0', 'Services publiés'],
+                ['📋', $totalOffres ?? '0',   'Offres actives'],
+                ['👥', $totalUsers ?? '0',    'Membres inscrits'],
+                ['🇬🇳', '100%',               'Gratuit'],
+            ] as [$icon, $val, $label])
+                <div style="background:#0D2137;padding:16px;text-align:center;">
+                    <div style="font-size:22px;margin-bottom:4px;">{{ $icon }}</div>
+                    <div style="font-size:20px;font-weight:700;color:#F0A500;">{{ $val }}+</div>
+                    <div style="font-size:11px;color:#8AA4B8;margin-top:2px;">{{ $label }}</div>
+                </div>
+            @endforeach
+        </div>
+
     </div>
+
+    {{-- BAS DU FOOTER --}}
+    <div style="background:#080F1A;padding:16px 28px;">
+        <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+            <span style="font-size:12px;color:#4A6A7A;">
+                © 2025–2026 JobLink GN — Licence 4 Génie Logiciel, UGANC — Tous droits réservés
+            </span>
+            <div style="display:flex;gap:20px;">
+                @foreach(['Conditions d\'utilisation', 'Politique de confidentialité', 'Contact'] as $link)
+                    <a href="#"
+                       style="font-size:12px;color:#4A6A7A;text-decoration:none;"
+                       onmouseover="this.style.color='#F0A500'"
+                       onmouseout="this.style.color='#4A6A7A'">
+                        {{ $link }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
 </footer>
 
 @stack('scripts')

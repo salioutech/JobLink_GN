@@ -1,0 +1,306 @@
+/* ============================================================
+   JobLink GN — Responsive Mobile CSS
+   À placer dans public/css/responsive.css
+   et inclure dans layouts/app.blade.php :
+   <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+   ============================================================ */
+
+/* ── VARIABLES ──────────────────────────────────────────── */
+:root {
+  --mobile: 640px;
+  --tablet: 900px;
+}
+
+/* ── UTILITAIRES GÉNÉRAUX ───────────────────────────────── */
+@media (max-width: 640px) {
+  * { box-sizing: border-box; }
+
+  /* Empêcher le débordement horizontal */
+  body { overflow-x: hidden; }
+
+  /* Tous les éléments avec padding 28px → 14px */
+  [style*="padding:40px 28px"],
+  [style*="padding: 40px 28px"],
+  [style*="padding:56px 28px"],
+  [style*="padding: 56px 28px"],
+  [style*="padding:48px 28px"],
+  [style*="padding: 48px 28px"],
+  [style*="padding:52px 28px"],
+  [style*="padding: 52px 28px"],
+  [style*="padding:28px"],
+  [style*="padding: 28px"] {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  /* Max-width → pleine largeur */
+  [style*="max-width:900px"],
+  [style*="max-width: 900px"],
+  [style*="max-width:580px"],
+  [style*="max-width: 580px"],
+  [style*="max-width:620px"],
+  [style*="max-width: 620px"],
+  [style*="max-width:660px"],
+  [style*="max-width: 660px"] {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  /* ── HERO ──────────────────────────────────────────────── */
+  /* Titre hero */
+  [style*="font-size:34px"],
+  [style*="font-size: 34px"] {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+  }
+
+  [style*="font-size:26px"],
+  [style*="font-size: 26px"] {
+    font-size: 18px !important;
+  }
+
+  /* Barre de recherche hero → vertical */
+  [style*="display:flex"][style*="border-radius:8px"][style*="overflow:hidden"] {
+    flex-direction: column !important;
+    border-radius: 8px !important;
+  }
+
+  [style*="display:flex"][style*="border-radius:8px"][style*="overflow:hidden"] input,
+  [style*="display:flex"][style*="border-radius:8px"][style*="overflow:hidden"] select,
+  [style*="display:flex"][style*="border-radius:8px"][style*="overflow:hidden"] button {
+    width: 100% !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-top: 1px solid #eee !important;
+  }
+
+  /* Stats hero → 2 par ligne */
+  [style*="display:flex"][style*="gap:36px"] {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    justify-content: center !important;
+  }
+
+  [style*="display:flex"][style*="gap:36px"] > div {
+    min-width: 80px !important;
+  }
+
+  /* Séparateurs verticaux cachés sur mobile */
+  [style*="width:1px"][style*="height:36px"] {
+    display: none !important;
+  }
+
+  /* ── GRILLES → 1 COLONNE ───────────────────────────────── */
+  /* Catégories : 7 colonnes → 3 colonnes */
+  [style*="grid-template-columns:repeat(7,1fr)"],
+  [style*="grid-template-columns: repeat(7,1fr)"],
+  [style*="grid-template-columns:repeat(7, 1fr)"],
+  [style*="grid-template-columns: repeat(7, 1fr)"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* 3 colonnes → 1 colonne */
+  [style*="grid-template-columns:repeat(3,1fr)"],
+  [style*="grid-template-columns: repeat(3,1fr)"],
+  [style*="grid-template-columns:repeat(3, 1fr)"],
+  [style*="grid-template-columns: repeat(3, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 2 colonnes → 1 colonne */
+  [style*="grid-template-columns:repeat(2,1fr)"],
+  [style*="grid-template-columns: repeat(2,1fr)"],
+  [style*="grid-template-columns:repeat(2, 1fr)"],
+  [style*="grid-template-columns: repeat(2, 1fr)"],
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 4 colonnes stats → 2 colonnes */
+  [style*="grid-template-columns:repeat(4,1fr)"],
+  [style*="grid-template-columns: repeat(4,1fr)"],
+  [style*="grid-template-columns:repeat(4, 1fr)"],
+  [style*="grid-template-columns: repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* 5 colonnes rôles inscription → 2 colonnes */
+  [style*="grid-template-columns:repeat(5,1fr)"],
+  [style*="grid-template-columns: repeat(5,1fr)"],
+  [style*="grid-template-columns:repeat(5, 1fr)"],
+  [style*="grid-template-columns: repeat(5, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── DASHBOARD : sidebar + contenu ────────────────────── */
+  [style*="grid-template-columns:220px"],
+  [style*="grid-template-columns: 220px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Masquer la sidebar sur mobile */
+  [style*="grid-template-columns:220px"] > div:first-child,
+  [style*="grid-template-columns: 220px"] > div:first-child {
+    display: none !important;
+  }
+
+  /* ── PAGE SHOW (service/offre) : 2 colonnes → 1 ───────── */
+  [style*="grid-template-columns:1fr 300px"],
+  [style*="grid-template-columns: 1fr 300px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Colonne droite (sticky) → position normale */
+  [style*="position:sticky"],
+  [style*="position: sticky"] {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  /* ── FORMULAIRES ───────────────────────────────────────── */
+  /* Flex row → column pour certains champs */
+  [style*="display:flex"][style*="gap:12px"] input,
+  [style*="display:flex"][style*="gap:12px"] select,
+  [style*="display:flex; gap:12px"] input,
+  [style*="display:flex; gap:12px"] select {
+    width: 100% !important;
+  }
+
+  /* ── TABLEAUX ──────────────────────────────────────────── */
+  table {
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap;
+    font-size: 12px !important;
+  }
+
+  /* ── CARTES ────────────────────────────────────────────── */
+  /* Padding des cartes réduit */
+  [style*="padding:24px"],
+  [style*="padding: 24px"] {
+    padding: 14px !important;
+  }
+
+  [style*="padding:20px"],
+  [style*="padding: 20px"] {
+    padding: 12px !important;
+  }
+
+  /* ── BOUTONS ───────────────────────────────────────────── */
+  /* Boutons côte à côte → empilés */
+  [style*="display:flex"][style*="gap:16px"] > a[style*="padding:13px"],
+  [style*="display:flex"][style*="gap:16px"] > a[style*="padding: 13px"] {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* ── FOOTER ────────────────────────────────────────────── */
+  .footer {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 6px !important;
+    padding: 12px !important;
+  }
+
+  .footer-links {
+    justify-content: center !important;
+  }
+
+  /* ── COMMENT CA MARCHE (3 étapes) ─────────────────────── */
+  [style*="grid-template-columns:repeat(3,1fr)"][style*="max-width:660px"],
+  [style*="grid-template-columns: repeat(3,1fr)"][style*="max-width:660px"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* ── CTA FINAL ─────────────────────────────────────────── */
+  [style*="display:flex"][style*="gap:16px"][style*="justify-content:center"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  [style*="display:flex"][style*="gap:16px"][style*="justify-content:center"] a {
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  /* ── PROFIL SHOW ───────────────────────────────────────── */
+  [style*="display:flex"][style*="gap:24px"] {
+    flex-wrap: wrap !important;
+  }
+
+  /* ── SEARCH FILTRES ────────────────────────────────────── */
+  [style*="display:flex"][style*="gap:12px"][style*="flex-wrap"] {
+    flex-direction: column !important;
+  }
+
+  /* ── MODAL ─────────────────────────────────────────────── */
+  [style*="max-width:400px"][style*="border-radius:14px"] {
+    margin: 10px !important;
+    padding: 20px !important;
+  }
+
+  /* ── TEXTES ────────────────────────────────────────────── */
+  [style*="font-size:15px"],
+  [style*="font-size: 15px"] {
+    font-size: 13px !important;
+  }
+
+  [style*="font-size:22px"],
+  [style*="font-size: 22px"] {
+    font-size: 16px !important;
+  }
+
+  /* ── CANDIDATURE SHOW ──────────────────────────────────── */
+  [style*="display:flex"][style*="align-items:center"][style*="justify-content:space-between"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+}
+
+/* ── TABLETTE (641px - 900px) ───────────────────────────── */
+@media (min-width: 641px) and (max-width: 900px) {
+  /* 3 colonnes → 2 colonnes */
+  [style*="grid-template-columns:repeat(3,1fr)"],
+  [style*="grid-template-columns: repeat(3,1fr)"],
+  [style*="grid-template-columns:repeat(3, 1fr)"],
+  [style*="grid-template-columns: repeat(3, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* 7 colonnes → 4 colonnes */
+  [style*="grid-template-columns:repeat(7,1fr)"],
+  [style*="grid-template-columns: repeat(7,1fr)"] {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Sidebar + contenu : sidebar plus petite */
+  [style*="grid-template-columns:220px"],
+  [style*="grid-template-columns: 220px"] {
+    grid-template-columns: 180px 1fr !important;
+  }
+
+  /* Page show : colonne droite plus petite */
+  [style*="grid-template-columns:1fr 300px"],
+  [style*="grid-template-columns: 1fr 300px"] {
+    grid-template-columns: 1fr 240px !important;
+  }
+}
+
+@media (max-width: 640px) {
+    /* Footer 4 colonnes → 1 colonne */
+    [style*="grid-template-columns:2fr 1fr 1fr 1fr"],
+    [style*="grid-template-columns: 2fr 1fr 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+    }
+    /* Stats footer → 2 colonnes */
+    [style*="grid-template-columns:repeat(4,1fr)"][style*="background:rgba(255,255,255,0.06)"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}

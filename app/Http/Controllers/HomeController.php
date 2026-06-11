@@ -24,6 +24,13 @@ class HomeController extends Controller
 
         $categories = Categorie::generales()->get();
 
-        return view('home', compact('services', 'offres', 'categories'));
+        $categories    = \App\Models\Categorie::generales()->get();
+    $services      = \App\Models\Service::with(['user.profile','categorie'])->where('statut','actif')->latest()->take(6)->get();
+    $offres        = \App\Models\Offre::with(['user.profile'])->where('statut','actif')->latest()->take(6)->get();
+    $totalServices = \App\Models\Service::where('statut','actif')->count();
+    $totalOffres   = \App\Models\Offre::where('statut','actif')->count();
+    $totalUsers    = \App\Models\User::where('statut','actif')->count();
+
+    return view('home', compact('categories','services','offres','totalServices','totalOffres','totalUsers'));
     }
 }
