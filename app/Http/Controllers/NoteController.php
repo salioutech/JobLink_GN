@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Note;
 use App\Models\Service;
 use App\Models\Offre;
@@ -40,3 +41,4 @@ class NoteController extends Controller
         return back()->with('success', 'Note enregistrée !');
     }
 }
+

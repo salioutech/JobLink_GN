@@ -25,6 +25,7 @@ class Service extends Model
     }
 
     public function likes()
+
 {
     return $this->morphMany(Like::class, 'likeable');
 }
@@ -43,4 +44,5 @@ public function favoris()
 {
     return $this->morphMany(Favori::class, 'favorable');
 }
+
 }

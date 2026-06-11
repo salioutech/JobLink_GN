@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Like;
 use App\Models\Service;
 use App\Models\Offre;
@@ -49,3 +50,4 @@ class LikeController extends Controller
         return back()->with('success', $liked ? 'Publication likée !' : 'Like retiré.');
     }
 }
+

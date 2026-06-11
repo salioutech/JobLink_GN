@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
                 'statut'   => 'actif',
             ]
         );
-        $profileC = Profile::firstOrCreate(
+        $profileConsultant = Profile::firstOrCreate(
             ['user_id' => $consultant->id],
             [
                 'nom'             => 'Diallo',
@@ -52,12 +52,14 @@ class UserSeeder extends Seeder
             ]
         );
         ProfilDetail::firstOrCreate(
-            ['profile_id' => $profileC->id],
+            ['profile_id' => $profileConsultant->id],
             [
                 'competences'   => 'Laravel, PHP, MySQL, Vue.js, Bootstrap',
                 'tarif'         => 500000,
                 'devise'        => 'GNF',
                 'disponibilite' => true,
+                'portfolio_url' => null,
+
             ]
         );
 
@@ -88,6 +90,8 @@ class UserSeeder extends Seeder
                 'tarif'         => 300000,
                 'devise'        => 'GNF',
                 'disponibilite' => true,
+                'portfolio_url' => null,
+
             ]
         );
 
@@ -118,6 +122,8 @@ class UserSeeder extends Seeder
                 'tarif'         => 150000,
                 'devise'        => 'GNF',
                 'disponibilite' => true,
+                'portfolio_url' => null,
+
             ]
         );
 
@@ -160,7 +166,9 @@ class UserSeeder extends Seeder
                 'prenom'          => 'Aminata',
                 'localisation'    => 'Lambanyi',
                 'telephone'       => '622000005',
+
                 'bio'             => 'Particulière à la recherche de prestataires fiables',
+
                 'completion_rate' => 60,
             ]
         );

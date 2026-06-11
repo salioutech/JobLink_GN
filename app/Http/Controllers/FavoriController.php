@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Favori;
 use App\Models\Service;
 use App\Models\Offre;
@@ -64,3 +65,4 @@ class FavoriController extends Controller
         return view('favoris.index', compact('favoris'));
     }
 }
+

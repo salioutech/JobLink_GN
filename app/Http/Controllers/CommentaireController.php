@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Commentaire;
 use App\Models\Service;
 use App\Models\Offre;
@@ -46,3 +47,4 @@ class CommentaireController extends Controller
         return back()->with('success', 'Commentaire supprimé.');
     }
 }
+
