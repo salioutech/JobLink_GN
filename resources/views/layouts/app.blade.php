@@ -153,41 +153,27 @@
         /* ── RESPONSIVE GLOBAL ───────────────────────── */
 
         /* Cartes en grille → colonne unique sur mobile */
-        @media (max-width: 768px) {
-            /* Grilles 2+ colonnes → 1 colonne */
-            [style*="grid-template-columns: repeat(2"],
-            [style*="grid-template-columns:repeat(2"],
-            [style*="grid-template-columns: 1fr 1fr"],
-            [style*="grid-template-columns:1fr 1fr"] {
-                grid-template-columns: 1fr !important;
+        @media (max-width: 640px) {
+
+            /* Footer : 4 colonnes → 2 par ligne */
+            [style*="grid-template-columns:2fr 1fr 1fr 1fr"],
+            [style*="grid-template-columns: 2fr 1fr 1fr 1fr"] {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 20px !important;
             }
-            [style*="grid-template-columns: repeat(3"],
-            [style*="grid-template-columns:repeat(3"],
-            [style*="grid-template-columns: repeat(4"],
-            [style*="grid-template-columns:repeat(4"] {
-                grid-template-columns: 1fr !important;
+
+            /* Stats footer → 2 colonnes aussi */
+            [style*="grid-template-columns:repeat(4,1fr)"][style*="background:rgba(255,255,255,0.06)"],
+            [style*="grid-template-columns: repeat(4,1fr)"][style*="background:rgba(255,255,255,0.06)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
             }
-            /* Sidebar + contenu → colonne unique */
-            [style*="grid-template-columns: 220px"],
-            [style*="grid-template-columns:220px"] {
-                grid-template-columns: 1fr !important;
+
+            /* Réduire le padding du footer sur mobile */
+            footer[style*="padding:28px 28px 0"],
+            footer[style*="padding: 28px 28px 0"] {
+                padding: 20px 14px 0 !important;
             }
-            /* Masquer sidebar sur mobile */
-            [style*="grid-template-columns: 220px"] > div:first-child,
-            [style*="grid-template-columns:220px"] > div:first-child {
-                display: none !important;
-            }
-            /* Padding réduit */
-            [style*="padding:24px"] { padding: 14px !important; }
-            [style*="padding: 24px"] { padding: 14px !important; }
-            /* Max-width full sur mobile */
-            [style*="max-width:900px"],
-            [style*="max-width: 900px"],
-            [style*="max-width:580px"],
-            [style*="max-width: 580px"] {
-                margin-left: 12px !important;
-                margin-right: 12px !important;
-            }
+
         }
 
         /* Burger visible sur mobile, actions desktop masquées */
@@ -295,47 +281,44 @@
 </main>
 
 <!-- ── FOOTER ───────────────────────────────────────── -->
-<footer style="background:#0D2137;padding:48px 28px 0;margin-top:auto;">
+<footer style="background:#0D2137;padding:28px 28px 0;margin-top:auto;">
 
     {{-- CONTENU PRINCIPAL --}}
     <div style="max-width:1100px;margin:0 auto;">
-        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:24px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08);">
 
             {{-- COLONNE 1 — LOGO & DESCRIPTION --}}
             <div>
-                <div style="margin-bottom:16px;">
+                <div style="margin-bottom:10px;">
                     <img src="{{ asset('images/logo.png') }}" alt="JobLinkGN"
-                         style="height:52px;object-fit:contain;"
-                         onerror="this.outerHTML='<span style=\'font-size:22px;font-weight:700;color:#fff\'>JobLink<span style=\'color:#F0A500\'>GN</span></span>'">
+                         style="height:42px;object-fit:contain;"
+                         onerror="this.outerHTML='<span style=\'font-size:20px;font-weight:700;color:#fff\'>JobLink<span style=\'color:#F0A500\'>GN</span></span>'">
                 </div>
-                <p style="font-size:13px;color:#8AA4B8;line-height:1.8;margin-bottom:20px;max-width:280px;">
+                <p style="font-size:12px;color:#8AA4B8;line-height:1.7;margin-bottom:12px;max-width:260px;">
                     La première plateforme guinéenne de mise en relation professionnelle. Connecter les talents, créer des opportunités.
                 </p>
-                {{-- BADGE --}}
-                <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(26,155,90,0.15);border:1px solid rgba(26,155,90,0.3);border-radius:20px;padding:6px 14px;">
-                    <span style="font-size:14px;">🇬🇳</span>
-                    <span style="font-size:12px;color:#1A9B5A;font-weight:600;">Made in Guinea</span>
+                <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(26,155,90,0.15);border:1px solid rgba(26,155,90,0.3);border-radius:20px;padding:4px 12px;">
+                    <span style="font-size:13px;">🇬🇳</span>
+                    <span style="font-size:11px;color:#1A9B5A;font-weight:600;">Made in Guinea</span>
                 </div>
             </div>
 
             {{-- COLONNE 2 — NAVIGATION --}}
             <div>
-                <h4 style="font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">
-                    Navigation
-                </h4>
-                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+                <h4 style="font-size:12px;font-weight:700;color:#fff;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Navigation</h4>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
                     @foreach([
-                        ['Accueil',               route('home')],
-                        ['Rechercher',             route('search')],
-                        ['Services disponibles',   route('search', ['tab' => 'services'])],
-                        ['Offres d\'emploi',       route('search', ['tab' => 'offres'])],
+                        ['Accueil',             route('home')],
+                        ['Rechercher',          route('search')],
+                        ['Services',            route('search', ['tab' => 'services'])],
+                        ['Offres d\'emploi',    route('search', ['tab' => 'offres'])],
                     ] as [$label, $url])
                         <li>
                             <a href="{{ $url }}"
-                               style="font-size:13px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s;"
+                               style="font-size:12px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:5px;"
                                onmouseover="this.style.color='#F0A500'"
                                onmouseout="this.style.color='#8AA4B8'">
-                                <span style="color:#1A9B5A;font-size:10px;">▶</span> {{ $label }}
+                                <span style="color:#1A9B5A;font-size:9px;">▶</span> {{ $label }}
                             </a>
                         </li>
                     @endforeach
@@ -344,10 +327,8 @@
 
             {{-- COLONNE 3 — MON COMPTE --}}
             <div>
-                <h4 style="font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">
-                    Mon compte
-                </h4>
-                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;">
+                <h4 style="font-size:12px;font-weight:700;color:#fff;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Mon compte</h4>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
                     @auth
                         @foreach([
                             ['Tableau de bord', route('dashboard')],
@@ -357,10 +338,10 @@
                         ] as [$label, $url])
                             <li>
                                 <a href="{{ $url }}"
-                                   style="font-size:13px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:6px;"
+                                   style="font-size:12px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:5px;"
                                    onmouseover="this.style.color='#F0A500'"
                                    onmouseout="this.style.color='#8AA4B8'">
-                                    <span style="color:#1A9B5A;font-size:10px;">▶</span> {{ $label }}
+                                    <span style="color:#1A9B5A;font-size:9px;">▶</span> {{ $label }}
                                 </a>
                             </li>
                         @endforeach
@@ -371,10 +352,10 @@
                         ] as [$label, $url])
                             <li>
                                 <a href="{{ $url }}"
-                                   style="font-size:13px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:6px;"
+                                   style="font-size:12px;color:#8AA4B8;text-decoration:none;display:flex;align-items:center;gap:5px;"
                                    onmouseover="this.style.color='#F0A500'"
                                    onmouseout="this.style.color='#8AA4B8'">
-                                    <span style="color:#1A9B5A;font-size:10px;">▶</span> {{ $label }}
+                                    <span style="color:#1A9B5A;font-size:9px;">▶</span> {{ $label }}
                                 </a>
                             </li>
                         @endforeach
@@ -384,41 +365,32 @@
 
             {{-- COLONNE 4 — CONTACT --}}
             <div>
-                <h4 style="font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">
-                    Contact
-                </h4>
-                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px;">
-                    <li style="display:flex;align-items:flex-start;gap:10px;">
-                        <span style="font-size:16px;margin-top:1px;">📍</span>
-                        <span style="font-size:13px;color:#8AA4B8;line-height:1.6;">Conakry, Guinée<br>Université UGANC</span>
+                <h4 style="font-size:12px;font-weight:700;color:#fff;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Contact</h4>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+                    <li style="display:flex;align-items:flex-start;gap:8px;">
+                        <span style="font-size:14px;margin-top:1px;">📍</span>
+                        <span style="font-size:12px;color:#8AA4B8;line-height:1.5;">Conakry, Guinée<br>Université UGANC</span>
                     </li>
-                    <li style="display:flex;align-items:center;gap:10px;">
-                        <span style="font-size:16px;">📧</span>
+                    <li style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:14px;">📧</span>
                         <a href="mailto:contact@joblinkgn.com"
-                           style="font-size:13px;color:#8AA4B8;text-decoration:none;"
+                           style="font-size:12px;color:#8AA4B8;text-decoration:none;"
                            onmouseover="this.style.color='#F0A500'"
-                           onmouseout="this.style.color='#8AA4B8'">
-                            contact@joblinkgn.com
-                        </a>
+                           onmouseout="this.style.color='#8AA4B8'">contact@joblinkgn.com</a>
                     </li>
-                    <li style="display:flex;align-items:center;gap:10px;">
-                        <span style="font-size:16px;">📱</span>
-                        <span style="font-size:13px;color:#8AA4B8;">+224 620 000 000</span>
+                    <li style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:14px;">📱</span>
+                        <span style="font-size:12px;color:#8AA4B8;">+224 620 000 000</span>
                     </li>
                 </ul>
-
-                {{-- RÉSEAUX SOCIAUX --}}
-                <div style="display:flex;gap:10px;margin-top:20px;">
-                    @foreach([
-                        ['f', '#1877F2', 'Facebook'],
-                        ['in', '#0A66C2', 'LinkedIn'],
-                        ['tw', '#1DA1F2', 'Twitter'],
-                    ] as [$letter, $color, $name])
-                        <a href="#" title="{{ $name }}"
-                           style="width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#8AA4B8;text-decoration:none;border:1px solid rgba(255,255,255,0.08);"
-                           onmouseover="this.style.background='{{ $color }}';this.style.color='#fff'"
+                {{-- RÉSEAUX --}}
+                <div style="display:flex;gap:8px;margin-top:12px;">
+                    @foreach([['f','#1877F2','Facebook'],['in','#0A66C2','LinkedIn'],['tw','#1DA1F2','Twitter']] as [$l,$c,$n])
+                        <a href="#" title="{{ $n }}"
+                           style="width:30px;height:30px;border-radius:6px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#8AA4B8;text-decoration:none;border:1px solid rgba(255,255,255,0.08);"
+                           onmouseover="this.style.background='{{ $c }}';this.style.color='#fff'"
                            onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#8AA4B8'">
-                            {{ $letter }}
+                            {{ $l }}
                         </a>
                     @endforeach
                 </div>
@@ -426,18 +398,18 @@
 
         </div>
 
-        {{-- STATS RAPIDES --}}
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;margin-bottom:28px;margin-top:32px;">
+        {{-- STATS --}}
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;margin-top:20px;">
             @foreach([
-                ['💼', $totalServices ?? '0', 'Services publiés'],
-                ['📋', $totalOffres ?? '0',   'Offres actives'],
-                ['👥', $totalUsers ?? '0',    'Membres inscrits'],
+                ['💼', $totalServices ?? '0', 'Services'],
+                ['📋', $totalOffres   ?? '0', 'Offres'],
+                ['👥', $totalUsers    ?? '0', 'Membres'],
                 ['🇬🇳', '100%',               'Gratuit'],
             ] as [$icon, $val, $label])
-                <div style="background:#0D2137;padding:16px;text-align:center;">
-                    <div style="font-size:22px;margin-bottom:4px;">{{ $icon }}</div>
-                    <div style="font-size:20px;font-weight:700;color:#F0A500;">{{ $val }}+</div>
-                    <div style="font-size:11px;color:#8AA4B8;margin-top:2px;">{{ $label }}</div>
+                <div style="background:#0D2137;padding:12px 8px;text-align:center;">
+                    <div style="font-size:18px;margin-bottom:2px;">{{ $icon }}</div>
+                    <div style="font-size:16px;font-weight:700;color:#F0A500;">{{ $val }}+</div>
+                    <div style="font-size:10px;color:#8AA4B8;margin-top:1px;">{{ $label }}</div>
                 </div>
             @endforeach
         </div>
@@ -445,19 +417,14 @@
     </div>
 
     {{-- BAS DU FOOTER --}}
-    <div style="background:#080F1A;padding:16px 28px;">
-        <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-            <span style="font-size:12px;color:#4A6A7A;">
-                © 2025–2026 JobLink GN — Licence 4 Génie Logiciel, UGANC — Tous droits réservés
-            </span>
-            <div style="display:flex;gap:20px;">
-                @foreach(['Conditions d\'utilisation', 'Politique de confidentialité', 'Contact'] as $link)
-                    <a href="#"
-                       style="font-size:12px;color:#4A6A7A;text-decoration:none;"
+    <div style="background:#080F1A;padding:12px 28px;margin-top:16px;">
+        <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+            <span style="font-size:11px;color:#4A6A7A;">© 2025–2026 JobLink GN — Licence 4 Génie Logiciel, UGANC</span>
+            <div style="display:flex;gap:16px;">
+                @foreach(["Conditions d'utilisation", 'Confidentialité', 'Contact'] as $link)
+                    <a href="#" style="font-size:11px;color:#4A6A7A;text-decoration:none;"
                        onmouseover="this.style.color='#F0A500'"
-                       onmouseout="this.style.color='#4A6A7A'">
-                        {{ $link }}
-                    </a>
+                       onmouseout="this.style.color='#4A6A7A'">{{ $link }}</a>
                 @endforeach
             </div>
         </div>
